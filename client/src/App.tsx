@@ -1,17 +1,15 @@
+import { ThemeProvider } from "@mui/material/styles";
 import React from "react";
+import AuthView from "./components/auth/AuthView";
+import { lightTheme } from "./contexts/settings/theme";
 
 function App() {
   return (
-    <div>
-      <header>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={lightTheme}>
+      <div className="App">
+        <AuthView />
+      </div>
+    </ThemeProvider>
   );
 }
 
