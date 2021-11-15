@@ -1,5 +1,14 @@
-import { Box, Button, Container, FormControl, TextField } from "@mui/material";
-import React, { useCallback, useRef } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useCallback, useContext, useRef, useState } from "react";
+import { signUpApi } from "../../api/auth";
+import { appContext } from "../../AppContext";
 
 export function Register() {
   const nameRef = useRef<HTMLInputElement>(null);
@@ -7,9 +16,46 @@ export function Register() {
   const passwordRef = useRef<HTMLInputElement>(null);
   const repeatPasswordRef = useRef<HTMLInputElement>(null);
 
-  const register = useCallback(() => {
-    console.log(emailRef.current?.value);
-  }, []);
+  const [message, setMessage] = useState<string>();
+
+  const { signIn } = useContext(appContext);
+
+  const handleSubmit = useCallback(() => {
+    const name = nameRef.current?.value || "";
+    const email = emailRef.current?.value || "";
+    const password = passwordRef.current?.value || "";
+    const repeatedPassword = repeatPasswordRef.current?.value || "";
+
+    if (name.length === 0) {
+      setMessage("Name can not be empty!");
+      return;
+    }
+
+    if (email.length === 0) {
+      setMessage("Email can not be empty!");
+      return;
+    }
+
+    if (password.length === 0) {
+      setMessage("Password can not be empty!");
+      return;
+    }
+
+    if (repeatedPassword !== password) {
+      setMessage("Passwords are different!");
+      return;
+    }
+
+    setMessage(undefined);
+
+    const credentials = { email, name, password };
+
+    signUpApi(credentials)
+      .then((x) => signIn(x, credentials))
+      .catch(() => {
+        setMessage("Registration failed!");
+      });
+  }, [signIn, setMessage]);
 
   return (
     <Container
@@ -50,6 +96,11 @@ export function Register() {
           inputRef={repeatPasswordRef}
           sx={{ pb: 5 }}
         />
+        {message && (
+          <Typography sx={{ alignSelf: "center", color: "red", pb: "10px" }}>
+            {message}
+          </Typography>
+        )}
         <Button
           variant="contained"
           color="primary"
@@ -62,6 +113,7 @@ export function Register() {
               `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.primaryAlpha.main})`,
             py: "18px",
           }}
+          onClick={handleSubmit}
         >
           Register
         </Button>

@@ -4,13 +4,45 @@ import {
   Container,
   FormControl,
   Link,
-  TextField
+  TextField,
+  Typography,
 } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
+import { signInApi } from "../../api/auth";
+import { appContext } from "../../AppContext";
 
 export function Login() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  const [message, setMessage] = useState<string>();
+
+  const { signIn } = useContext(appContext);
+
+  const handleSubmit = useCallback(() => {
+    const email = emailRef.current?.value || "";
+    const password = passwordRef.current?.value || "";
+
+    if (email.length === 0) {
+      setMessage("Email can not be empty!");
+      return;
+    }
+
+    if (password.length === 0) {
+      setMessage("Password can not be empty!");
+      return;
+    }
+
+    setMessage(undefined);
+
+    const credentials = { email, password };
+
+    signInApi(credentials)
+      .then((x) => signIn(x, credentials))
+      .catch((e) => {
+        setMessage("Login failed!");
+      });
+  }, [signIn, setMessage]);
 
   return (
     <Container
@@ -38,6 +70,11 @@ export function Login() {
           inputRef={passwordRef}
           sx={{ pb: 5 }}
         />
+        {message && (
+          <Typography sx={{ alignSelf: "center", color: "red", pb: "10px" }}>
+            {message}
+          </Typography>
+        )}
         <Button
           variant="contained"
           type="submit"
@@ -49,6 +86,7 @@ export function Login() {
               `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.primaryAlpha.main})`,
             py: "18px",
           }}
+          onClick={handleSubmit}
         >
           Log in
         </Button>

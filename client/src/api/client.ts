@@ -3,48 +3,29 @@ import { ErrorResponse, IError, mapToErrorResponse } from "./error";
 export class HttpClient {
   private static apiUrl = "http://localhost:8080";
 
-  constructor(private username: string, private password: string) {}
-
-  public async get<T>(
-    url: string,
-    requireAuthorization: boolean = true
-  ): Promise<T> {
-    return this.send(url, "GET", undefined, requireAuthorization);
+  public async get<T>(url: string): Promise<T> {
+    return this.send(url, "GET", undefined);
   }
 
-  public async post<T>(
-    url: string,
-    data: any,
-    requireAuthorization: boolean = true
-  ): Promise<T> {
-    return this.send(url, "POST", data, requireAuthorization);
+  public async post<T>(url: string, data: any): Promise<T> {
+    return this.send(url, "POST", data);
   }
 
-  public async put<T>(
-    url: string,
-    data: any,
-    requireAuthorization: boolean = true
-  ): Promise<T> {
-    return this.send(url, "PUT", data, requireAuthorization);
+  public async put<T>(url: string, data: any): Promise<T> {
+    return this.send(url, "PUT", data);
   }
 
-  public async delete<T>(
-    url: string,
-    requireAuthorization: boolean = true
-  ): Promise<T> {
-    return this.send(url, "PUT", undefined, requireAuthorization);
+  public async delete<T>(url: string): Promise<T> {
+    return this.send(url, "PUT", undefined);
   }
 
   public async send<T>(
     url: string,
     method: "POST" | "PUT" | "GET" | "DELETE",
-    data?: any,
-    requireAuthorization: boolean = true
+    data?: any
   ): Promise<T> {
     url = this.prepareUrl(url);
-    const headers = requireAuthorization
-      ? this.authorizationHeaders()
-      : new Headers();
+    const headers = new Headers();
 
     headers.append("Content-Type", "application/json");
 
@@ -53,6 +34,7 @@ export class HttpClient {
         method,
         body: data ? JSON.stringify(data) : undefined,
         headers,
+        credentials: "include",
       });
       return await this.handleResponse(response);
     } catch (e) {
@@ -67,17 +49,6 @@ export class HttpClient {
     return HttpClient.apiUrl + url;
   }
 
-  private authorizationHeaders() {
-    if (this.username.length === 0 || this.password.length === 0) {
-      throw new Error("User not logged in!");
-    }
-
-    const headers = new Headers();
-    headers.append("Authorization", ``);
-
-    return headers;
-  }
-
   private async handleResponse<T>(response: Response): Promise<T> {
     const data: T | IError = await response.json();
 
@@ -88,3 +59,5 @@ export class HttpClient {
     throw new ErrorResponse(data as IError);
   }
 }
+
+export const httpClient = new HttpClient();

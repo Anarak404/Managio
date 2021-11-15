@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import pl.managio.server.dto.request.LoginRequest;
+import pl.managio.server.model.UserModel;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -65,7 +66,9 @@ public class JSONAuthFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         super.successfulAuthentication(request, response, chain, authResult);
-        response.setStatus(200);
+        response.setHeader("Content-Type", "application/json");
+        ObjectMapper obj = new ObjectMapper();
+        obj.writeValue(response.getOutputStream(), new UserModel((UserDetailsImpl) authResult.getPrincipal()));
     }
 
 }
