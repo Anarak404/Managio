@@ -6,30 +6,27 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-@Entity(name = "app_user")
+@Entity(name = "team")
 @NoArgsConstructor
-public class User {
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, unique = true)
-    String email;
-
     @Column(nullable = false)
     String name;
-
-    @Column(nullable = false)
-    String password;
 
     @Column
     String photo;
@@ -37,16 +34,15 @@ public class User {
     @CreationTimestamp
     Timestamp creationDateTime;
 
-    @OneToMany(mappedBy = "owner")
-    List<Team> teams;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner", nullable = false)
+    User owner;
 
-    @OneToMany(mappedBy = "user")
-    List<TeamMember> teamUsers;
+    @OneToMany(mappedBy = "team")
+    List<TeamMember> users;
 
-    public User(String email, String name, String password) {
-        this.email = email;
+    public Team(String name) {
         this.name = name;
-        this.password = password;
     }
 
 }

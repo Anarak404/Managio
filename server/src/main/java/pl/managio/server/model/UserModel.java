@@ -9,10 +9,12 @@ public class UserModel {
 
     String name;
     String email;
+    String photo;
 
     public UserModel(User user) {
         name = user.getName();
         email = user.getEmail();
+        photo = user.getPhoto();
     }
 
     public UserModel(UserDetailsImpl userDetails) {
