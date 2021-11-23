@@ -110,8 +110,8 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<TeamModel> getTeams() {
         User user = authenticationService.getCurrentUser();
-        return user.getTeamUsers().stream()
-                .map(t -> new TeamModel(t.getTeam()))
+        return userRepository.getUserWithTeams(user).getTeams().stream()
+                .map(TeamModel::new)
                 .collect(Collectors.toList());
     }
 

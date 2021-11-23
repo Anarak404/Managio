@@ -1,7 +1,10 @@
 package pl.managio.server.domain;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.EmbeddedId;
@@ -13,9 +16,11 @@ import javax.persistence.MapsId;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "team_member")
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TeamMember {
 
     @EmbeddedId

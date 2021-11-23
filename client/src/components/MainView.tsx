@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import { TasksView } from "./task/TasksView";
-import { TeamView } from "./team/TeamView";
+import { TeamsView } from "./team/TeamsView";
 
 const drawerWidth = 450;
 
@@ -71,10 +71,18 @@ export function MainView() {
             <ExitToApp fontSize="large" color="primary" />
           </IconButton>
         </Drawer>
-        <Box sx={{ flexGrow: 1, bgcolor: "red", p: 3 }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            height: "100vh",
+            boxSizing: "border-box",
+            overflow: "hidden",
+          }}
+        >
           <Routes>
             <Route path="dashboard" element={<TasksView />} />
-            <Route path="teams" element={<TeamView />} />
+            <Route path="teams" element={<TeamsView />} />
             <Route path="issues" element={<TasksView />} />
             <Route path="search-issue" element={<TasksView />} />
             <Route path="create-task" element={<TasksView />} />

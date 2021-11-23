@@ -1,7 +1,10 @@
 package pl.managio.server.domain;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
@@ -13,9 +16,11 @@ import javax.persistence.OneToMany;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "app_user")
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
     @Id
