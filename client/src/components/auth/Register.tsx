@@ -51,7 +51,7 @@ export function Register() {
     const credentials = { email, name, password };
 
     signUpApi(credentials)
-      .then((x) => signIn(x, credentials))
+      .then((x) => signIn(x))
       .catch(() => {
         setMessage("Registration failed!");
       });

@@ -8,3 +8,7 @@ export const signInApi = async (data: ISignInRequest): Promise<IUser> => {
 export const signUpApi = async (data: ISignUpRequest): Promise<IUser> => {
   return httpClient.post("/register", data);
 };
+
+export const checkLoginApi = async (): Promise<IUser> => {
+  return httpClient.get("/checkLogin");
+};

@@ -1,9 +1,10 @@
-import React, { createContext, useCallback, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
+import { checkLoginApi } from "./api/auth";
 import { getTeamsApi } from "./api/team";
-import { ISignInRequest, ITeam, IUser } from "./api/types";
+import { ITeam, IUser } from "./api/types";
 
 interface IAppContext {
-  signIn(data: IUser, credentials: ISignInRequest): void;
+  signIn(data: IUser): void;
   loggedIn: boolean;
   me: IUser | undefined;
   teams: ITeam[];
@@ -15,7 +16,7 @@ interface IAppContextProps {
 }
 
 const defaultValue: IAppContext = {
-  signIn: (data: IUser, credentials: ISignInRequest) => void 0,
+  signIn: (data: IUser) => void 0,
   loggedIn: false,
   me: undefined,
   teams: [],
@@ -31,7 +32,7 @@ export function AppContextProvider({ children }: IAppContextProps) {
   const [teams, setTeams] = useState<ITeam[]>([]);
 
   const signIn = useCallback(
-    (data: IUser, credentials: ISignInRequest) => {
+    (data: IUser) => {
       setMe(data);
     },
     [setMe]
@@ -42,6 +43,16 @@ export function AppContextProvider({ children }: IAppContextProps) {
       .then((x) => setTeams(x))
       .catch((e) => {});
   }, [setTeams]);
+
+  useEffect(() => {
+    const asyncFunc = async () => {
+      try {
+        const response = await checkLoginApi();
+        setMe(response);
+      } catch {}
+    };
+    asyncFunc();
+  }, [setMe]);
 
   return (
     <Provider

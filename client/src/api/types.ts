@@ -27,6 +27,7 @@ export interface IUser {
 }
 
 export interface ITeam {
+  id: number;
   name: string;
   photo: string;
   owner: IUser;

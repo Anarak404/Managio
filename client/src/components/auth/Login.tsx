@@ -38,7 +38,7 @@ export function Login() {
     const credentials = { email, password };
 
     signInApi(credentials)
-      .then((x) => signIn(x, credentials))
+      .then((x) => signIn(x))
       .catch((e) => {
         setMessage("Login failed!");
       });
