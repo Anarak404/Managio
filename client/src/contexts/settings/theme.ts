@@ -9,6 +9,7 @@ declare module "@mui/material/styles" {
     mediumGrey: string;
     lightGrey: string;
     darkerBackgroundColor: string;
+    lightBackgroundColor: string;
   }
   interface ThemeOptions {
     primaryAlpha?: {
@@ -18,6 +19,7 @@ declare module "@mui/material/styles" {
     mediumGrey?: string;
     lightGrey?: string;
     darkerBackgroundColor?: string;
+    lightBackgroundColor?: string;
   }
 }
 
@@ -25,6 +27,7 @@ const white = "#fff";
 const mediumGrey = "#555";
 const lightGrey = "#ffffff24";
 const darkerBackgroundColor = "#0000006b";
+const lightBackgroundColor = "#f3f3f385";
 
 export const darkTheme: Theme = createTheme({
   palette: {
@@ -47,6 +50,7 @@ export const darkTheme: Theme = createTheme({
   mediumGrey: mediumGrey,
   lightGrey: lightGrey,
   darkerBackgroundColor: darkerBackgroundColor,
+  lightBackgroundColor: lightBackgroundColor,
 });
 
 export const lightTheme: Theme = createTheme({
@@ -70,4 +74,5 @@ export const lightTheme: Theme = createTheme({
   mediumGrey: mediumGrey,
   lightGrey: lightGrey,
   darkerBackgroundColor: darkerBackgroundColor,
+  lightBackgroundColor: lightBackgroundColor,
 });

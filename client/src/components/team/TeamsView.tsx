@@ -23,9 +23,9 @@ export function TeamsView() {
         Teams
       </Typography>
       <Box sx={{ p: "0 50px", overflowY: "auto", height: "100%" }}>
-        {teams.map((e) => (
+        {teams.map((t) => (
           <Box sx={{ p: "10px" }}>
-            <TeamItem team={e} key={e.name} />
+            <TeamItem team={t} key={t.id} />
           </Box>
         ))}
       </Box>

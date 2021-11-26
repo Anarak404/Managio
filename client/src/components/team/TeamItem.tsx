@@ -2,6 +2,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, IconButton, Paper } from "@mui/material";
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import { ITeam } from "../../api/types";
 import { appContext } from "../../AppContext";
 
@@ -21,13 +22,16 @@ export function TeamItem({ team }: IProps) {
         flexDirection: "row",
       }}
     >
-      <Box
-        sx={{
+      <Link
+        to={`team/${team.id}`}
+        style={{
           display: "flex",
           flex: 1,
-          p: "20px",
+          padding: "20px",
           minWidth: "50px",
           cursor: "pointer",
+          textDecoration: "none",
+          color: "black",
         }}
       >
         <Box sx={{ width: "110px" }}>{team.photo}</Box>
@@ -41,7 +45,7 @@ export function TeamItem({ team }: IProps) {
         >
           {team.name}
         </Box>
-      </Box>
+      </Link>
       {team.owner === me && (
         <Box
           sx={{

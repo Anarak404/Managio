@@ -7,10 +7,11 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  Toolbar
+  Toolbar,
 } from "@mui/material";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import { TasksView } from "./task/TasksView";
+import { TeamDetailsView } from "./team/TeamDetailsView";
 import { TeamsView } from "./team/TeamsView";
 
 const drawerWidth = 450;
@@ -75,14 +76,13 @@ export function MainView() {
           sx={{
             flexGrow: 1,
             p: 3,
-            height: "100vh",
             boxSizing: "border-box",
-            overflow: "hidden",
           }}
         >
           <Routes>
             <Route path="dashboard" element={<TasksView />} />
             <Route path="teams" element={<TeamsView />} />
+            <Route path="teams/team/:id" element={<TeamDetailsView />} />
             <Route path="issues" element={<TasksView />} />
             <Route path="search-issue" element={<TasksView />} />
             <Route path="create-task" element={<TasksView />} />
