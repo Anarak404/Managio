@@ -1,7 +1,9 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Modal, Typography } from "@mui/material";
+import { useCallback, useState } from "react";
 import { ITeam } from "../../api/types";
+import { TeamCreator } from "./TeamCreator";
 
 interface iProps {
   team: ITeam;
@@ -9,6 +11,12 @@ interface iProps {
 }
 
 export function TeamDetailsHeader({ team, isOwner }: iProps) {
+  const [editTeam, setEditTeam] = useState<boolean>(false);
+
+  const toggleVisibility = useCallback(() => {
+    setEditTeam((s) => !s);
+  }, [setEditTeam]);
+
   return (
     <Box sx={{ display: "flex" }}>
       <Box sx={{ width: "200px", height: "200px", bgcolor: "yellow" }}>
@@ -27,7 +35,7 @@ export function TeamDetailsHeader({ team, isOwner }: iProps) {
       </Box>
       {isOwner ? (
         <Box sx={{ display: "flex", gap: "30px", marginBottom: "auto" }}>
-          <IconButton>
+          <IconButton onClick={toggleVisibility}>
             <EditIcon />
           </IconButton>
           <IconButton>
@@ -55,6 +63,13 @@ export function TeamDetailsHeader({ team, isOwner }: iProps) {
           <Typography>{team.owner.email}</Typography>
         </Box>
       )}
+      <Modal
+        open={editTeam}
+        onClose={toggleVisibility}
+        sx={{ display: "flex" }}
+      >
+        <TeamCreator closeModal={toggleVisibility} team={team} />
+      </Modal>
     </Box>
   );
 }

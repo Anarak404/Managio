@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { appContext } from "../../AppContext";
 import { TeamCreator } from "./TeamCreator";
@@ -9,7 +9,7 @@ export function TeamsView() {
 
   const { teams, getTeams } = useContext(appContext);
 
-  const handleCreate = useCallback(() => {
+  const toggleVisibility = useCallback(() => {
     setOpen((s) => !s);
   }, [setOpen]);
 
@@ -35,11 +35,13 @@ export function TeamsView() {
         <Button
           variant="contained"
           sx={{ p: "10px 20px", fontSize: "20px" }}
-          onClick={handleCreate}
+          onClick={toggleVisibility}
         >
           Create Team
         </Button>
-        {open && <TeamCreator />}
+        <Modal open={open} onClose={toggleVisibility} sx={{ display: "flex" }}>
+          <TeamCreator closeModal={toggleVisibility} />
+        </Modal>
       </Box>
     </Box>
   );
