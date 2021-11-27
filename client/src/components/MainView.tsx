@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import { TasksView } from "./task/TasksView";
-import { TeamDetailsView } from "./team/TeamDetailsView";
+import { TeamRoute } from "./team";
 import { TeamsView } from "./team/TeamsView";
 
 const drawerWidth = 450;
@@ -82,7 +82,7 @@ export function MainView() {
           <Routes>
             <Route path="dashboard" element={<TasksView />} />
             <Route path="teams" element={<TeamsView />} />
-            <Route path="teams/team/:id" element={<TeamDetailsView />} />
+            <Route path="teams/team/:id" element={<TeamRoute />} />
             <Route path="issues" element={<TasksView />} />
             <Route path="search-issue" element={<TasksView />} />
             <Route path="create-task" element={<TasksView />} />
