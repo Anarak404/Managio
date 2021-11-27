@@ -10,7 +10,6 @@ import { TeamMembers } from "./TeamMembers";
 type Params = "id";
 
 export function TeamDetailsView() {
-  const [owner, setOwner] = useState<boolean>(false);
   const [team, setTeam] = useState<ITeamDetails>({
     id: 0,
     name: "",
@@ -35,19 +34,21 @@ export function TeamDetailsView() {
       getTeamApi(+id)
         .then((e) => {
           setTeam(e);
-          setOwner(me === e.owner);
         })
         .catch((e) => {});
     }
-  }, [setTeam, navigate, id, me, setOwner]);
+  }, [setTeam, navigate, id, me]);
 
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", gap: "15px", px: "80px" }}
     >
-      <TeamDetailsHeader key={team.id} team={team} isOwner={owner} />
+      <TeamDetailsHeader team={team} isOwner={team.owner.email === me?.email} />
       <Box sx={{ height: "500px", bgcolor: "red" }}>Tablica Kanban</Box>
-      <TeamMembers members={team.teamMembers} owner={team.owner} />
+      <TeamMembers
+        members={team.teamMembers}
+        isOwner={team.owner.email === me?.email}
+      />
     </Box>
   );
 }

@@ -1,17 +1,13 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useContext } from "react";
 import { IUser } from "../../api/types";
-import { appContext } from "../../AppContext";
 import { TeamMemberItem } from "./TeamMemberItem";
 
 interface IProps {
   members: IUser[];
-  owner: IUser;
+  isOwner: boolean;
 }
 
-export function TeamMembers({ members, owner }: IProps) {
-  const { me } = useContext(appContext);
-
+export function TeamMembers({ members, isOwner }: IProps) {
   return (
     <Box>
       <Box
@@ -23,7 +19,7 @@ export function TeamMembers({ members, owner }: IProps) {
         }}
       >
         <Typography sx={{ fontSize: "20px" }}>Members</Typography>
-        {true && <Button variant="contained">Add Member</Button>}
+        {isOwner && <Button variant="contained">Add Member</Button>}
       </Box>
       <Box
         sx={{
@@ -32,7 +28,7 @@ export function TeamMembers({ members, owner }: IProps) {
         }}
       >
         {members.map((e) => (
-          <TeamMemberItem key={e.email} member={e} canModify={owner === me} />
+          <TeamMemberItem key={e.email} member={e} canModify={isOwner} />
         ))}
       </Box>
     </Box>
