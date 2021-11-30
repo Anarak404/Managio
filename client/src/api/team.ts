@@ -12,7 +12,7 @@ export const getTeamsApi = async (): Promise<ITeam[]> => {
 };
 
 export const createTeamApi = async (data: ITeamRequest): Promise<ITeam> => {
-  return httpClient.post("/app/teams/create", data);
+  return httpClient.post("/app/teams/create", data, "multipart/form-data");
 };
 
 export const getTeamApi = async (id: number): Promise<ITeamDetails> => {
@@ -45,5 +45,5 @@ export const updateTeamApi = async (
   data: ITeamRequest,
   id: number
 ): Promise<ITeam> => {
-  return httpClient.put(`/app/teams/${id}/update`, data);
+  return httpClient.put(`/app/teams/${id}/update`, data, "multipart/form-data");
 };

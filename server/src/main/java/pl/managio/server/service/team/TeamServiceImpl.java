@@ -2,6 +2,8 @@ package pl.managio.server.service.team;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.managio.server.domain.Team;
 import pl.managio.server.domain.TeamMember;
 import pl.managio.server.domain.User;
@@ -13,11 +15,21 @@ import pl.managio.server.repository.TeamRepository;
 import pl.managio.server.repository.UserRepository;
 import pl.managio.server.service.authentication.AuthenticationService;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static pl.managio.server.controller.FileController.UPLOAD_DIR;
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +40,21 @@ public class TeamServiceImpl implements TeamService {
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
 
-    public Optional<TeamModel> createTeam(String name, String photo) {
+    @PostConstruct
+    public void init() {
+        try {
+            Files.createDirectories(Path.of(UPLOAD_DIR));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Optional<TeamModel> createTeam(String name, MultipartFile photo) {
         Team t = new Team(name);
         User user = authenticationService.getCurrentUser();
         t.setOwner(user);
-        t.setPhoto(photo);
+        setTeamPhoto(photo, t);
         try {
             teamRepository.save(t);
             TeamMember teamMember = new TeamMember(t, user);
@@ -93,7 +115,7 @@ public class TeamServiceImpl implements TeamService {
         User owner = authenticationService.getCurrentUser();
         var team = teamRepository.findById(teamId);
         var user = userRepository.findById(userId);
-        if (team.isEmpty() || user.isEmpty() || team.get().getOwner() != owner) {
+        if (team.isEmpty() || user.isEmpty() || !isOwner(team.get(), owner)) {
             return false;
         }
         var member = teamMemberRepository.findByTeamAndUser(team.get(), user.get());
@@ -121,21 +143,54 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Optional<TeamModel> updateTeam(Long id, String name, String photo) {
+    public Optional<TeamModel> updateTeam(Long id, String name, MultipartFile photo) {
         User user = authenticationService.getCurrentUser();
         var team = teamRepository.findById(id);
-        if (team.isEmpty() || !team.get().getOwner().getEmail().equals(user.getEmail())) {
+        if (team.isEmpty() || !isOwner(team.get(), user)) {
             return Optional.empty();
         }
 
         Team t = team.get();
         t.setName(name);
-        t.setPhoto(photo);
+        setTeamPhoto(photo, t);
         try {
             teamRepository.save(t);
             return Optional.of(new TeamModel(t));
+
         } catch (Exception e) {
             return Optional.empty();
+        }
+    }
+
+    private boolean isOwner(Team team, User user) {
+        return team.getOwner().getEmail().equals(user.getEmail());
+    }
+
+    private String getFilePath(Path path) {
+        return ServletUriComponentsBuilder.fromCurrentRequest()
+                .replacePath(path.toString().replaceAll("\\\\", "/"))
+                .build()
+                .toString();
+    }
+
+    private String getFilename(String originalName) {
+        int index = originalName.lastIndexOf('.');
+        String extension = index < 0 || index + 1 >= originalName.length()
+                ? "" : originalName.substring(index);
+        return UUID.randomUUID() + extension;
+    }
+
+    private void setTeamPhoto(MultipartFile photo, Team t) {
+        if (photo != null) {
+            try {
+                Path path = Paths.get(UPLOAD_DIR, getFilename(Objects.requireNonNull(photo.getOriginalFilename())));
+                Files.write(path, photo.getBytes(), StandardOpenOption.CREATE_NEW);
+                t.setPhoto(getFilePath(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            t.setPhoto("");
         }
     }
 

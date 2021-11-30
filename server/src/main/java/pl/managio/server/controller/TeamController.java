@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import pl.managio.server.dto.request.TeamMembersRequest;
-import pl.managio.server.dto.request.TeamRequest;
 import pl.managio.server.dto.response.ResultResponse;
 import pl.managio.server.model.TeamDetailsModel;
 import pl.managio.server.model.TeamModel;
@@ -39,11 +40,9 @@ public class TeamController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<TeamModel> createTeam(@Valid @RequestBody TeamRequest request) {
-        String name = request.getName();
-        String photo = request.getPhoto();
-
-        Optional<TeamModel> team = teamService.createTeam(name, photo);
+    public ResponseEntity<TeamModel> createTeam(@RequestParam(value = "name") String name,
+                                                @RequestParam(value = "photo", required = false) MultipartFile file) {
+        Optional<TeamModel> team = teamService.createTeam(name, file);
         return team.map(t -> new ResponseEntity<>(t, HttpStatus.CREATED))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
     }
@@ -85,12 +84,11 @@ public class TeamController {
                 result ? HttpStatus.OK : HttpStatus.FORBIDDEN);
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<TeamModel> updateTeam(@PathVariable Long id, @Valid @RequestBody TeamRequest request) {
-        String name = request.getName();
-        String photo = request.getPhoto();
-
-        Optional<TeamModel> team = teamService.updateTeam(id, name, photo);
+    @PutMapping(value = "/{id}/update")
+    public ResponseEntity<TeamModel> updateTeam(@RequestParam(value = "name") String name,
+                                                @PathVariable Long id,
+                                                @RequestParam(value = "photo", required = false) MultipartFile file) {
+        Optional<TeamModel> team = teamService.updateTeam(id, name, file);
         return team.map(t -> new ResponseEntity<>(t, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
     }

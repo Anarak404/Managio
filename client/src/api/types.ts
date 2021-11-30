@@ -17,10 +17,11 @@ export interface IResultResponse {
 
 export interface ITeamRequest {
   name: string;
-  photo: string;
+  photo: Blob | undefined;
 }
 
 export interface IUser {
+  id: number;
   name: string;
   email: string;
   photo: string;

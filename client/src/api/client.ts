@@ -1,5 +1,7 @@
 import { ErrorResponse, IError, mapToErrorResponse } from "./error";
 
+type ContentType = "application/json" | "multipart/form-data";
+
 export class HttpClient {
   private static apiUrl = "http://localhost:8080";
 
@@ -7,12 +9,20 @@ export class HttpClient {
     return this.send(url, "GET", undefined);
   }
 
-  public async post<T>(url: string, data: any): Promise<T> {
-    return this.send(url, "POST", data);
+  public async post<T>(
+    url: string,
+    data: any,
+    contentType = "application/json" as ContentType
+  ): Promise<T> {
+    return this.send(url, "POST", data, contentType);
   }
 
-  public async put<T>(url: string, data: any): Promise<T> {
-    return this.send(url, "PUT", data);
+  public async put<T>(
+    url: string,
+    data: any,
+    contentType = "application/json" as ContentType
+  ): Promise<T> {
+    return this.send(url, "PUT", data, contentType);
   }
 
   public async delete<T>(url: string): Promise<T> {
@@ -22,17 +32,26 @@ export class HttpClient {
   public async send<T>(
     url: string,
     method: "POST" | "PUT" | "GET" | "DELETE",
-    data?: any
+    data?: any,
+    contentType = "application/json" as ContentType
   ): Promise<T> {
     url = this.prepareUrl(url);
     const headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
+    if (contentType === "application/json") {
+      headers.append("Content-Type", "application/json");
+    }
+
+    const body = this.getBody(contentType, data);
+
+    console.log('body ', body);
+    console.log('headers ', headers);
+    
 
     try {
       const response = await fetch(url, {
         method,
-        body: data ? JSON.stringify(data) : undefined,
+        body,
         headers,
         credentials: "include",
       });
@@ -47,6 +66,24 @@ export class HttpClient {
 
   private prepareUrl(url: string) {
     return HttpClient.apiUrl + url;
+  }
+
+  private getBody(contentType: ContentType, data?: any) {
+    if (!data) {
+      return undefined;
+    }
+    if (contentType === "application/json") {
+      return JSON.stringify(data);
+    }
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value instanceof Blob) {
+        formData.append(key, value);
+      } else {
+        formData.append(key, value as string);
+      }
+    });
+    return formData;
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {

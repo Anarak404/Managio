@@ -1,4 +1,14 @@
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  TextField,
+  Typography
+} from "@mui/material";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { createTeamApi, updateTeamApi } from "../../api/team";
 import { ITeam, ITeamRequest } from "../../api/types";
@@ -26,6 +36,8 @@ export const TeamCreator = React.memo(function TeamCreator({
   });
   const [message, setMessage] = useState<string>();
   const [inEdit, setInEdit] = useState(!!teamProps);
+  const [selectedImage, setSelectedImage] = useState<Blob>();
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
 
   useEffect(() => {
     setInEdit(!!teamProps);
@@ -38,19 +50,36 @@ export const TeamCreator = React.memo(function TeamCreator({
     [setTeam]
   );
 
-  const onPhotoChange = useCallback(
-    (s: React.ChangeEvent<HTMLInputElement>) => {
-      setTeam((team) => ({ ...team, photo: s.target.value }));
+  const handleImageChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.files || e.target.files.length === 0) {
+        return;
+      }
+      let reader = new FileReader();
+      let file = e.target.files[0];
+
+      reader.onloadend = () => {
+        setSelectedImage(file);
+        setImagePreviewUrl(reader.result as string);
+        setTeam((team) => ({ ...team, photo: e.target.value }));
+      };
+      reader.readAsDataURL(file);
     },
-    [setTeam]
+    [setSelectedImage, setImagePreviewUrl, setTeam]
   );
+
+  const removeSelectedImage = useCallback(() => {
+    setSelectedImage(undefined);
+    setImagePreviewUrl("");
+    setTeam((team) => ({ ...team, photo: "" }));
+  }, [setSelectedImage, setImagePreviewUrl, setTeam]);
 
   const handleClose = useCallback(() => {
     closeModal();
   }, [closeModal]);
 
   const handleCreate = () => {
-    const photo = team.photo;
+    const photo = selectedImage;
     const name = team.name;
 
     if (name.length === 0) {
@@ -62,7 +91,7 @@ export const TeamCreator = React.memo(function TeamCreator({
 
     if (inEdit) {
       updateTeamApi(data, team.id)
-        .then((response) => {
+        .then(() => {
           getTeams();
           closeModal();
         })
@@ -71,8 +100,11 @@ export const TeamCreator = React.memo(function TeamCreator({
         });
     } else {
       createTeamApi(data)
-        .then((x) => closeModal())
-        .catch((e) => {
+        .then(() => {
+          getTeams();
+          closeModal();
+        })
+        .catch(() => {
           setMessage("Operation failed");
         });
     }
@@ -83,20 +115,38 @@ export const TeamCreator = React.memo(function TeamCreator({
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "330px",
+        height: "500px",
         p: "20px 40px",
-        maxWidth: "300px",
+        maxWidth: "350px",
         margin: "auto",
       }}
     >
       <Typography variant="h6" sx={{ p: "10px" }}>
         Photo
       </Typography>
-      <TextField
-        variant="outlined"
-        onChange={onPhotoChange}
-        value={team.photo}
-      />
+      <div>
+        <Avatar
+          src={imagePreviewUrl ? imagePreviewUrl : team.photo}
+          sx={{ width: "200px", height: "200px" }}
+        />
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <IconButton onClick={removeSelectedImage}>
+            <DeleteIcon />
+          </IconButton>
+          <input
+            accept="image/*"
+            type="file"
+            onChange={handleImageChange}
+            id="select-image"
+            style={{ display: "none" }}
+          />
+          <label htmlFor="select-image">
+            <IconButton component="span">
+              <AddCircleIcon />
+            </IconButton>
+          </label>
+        </div>
+      </div>
       <Typography variant="h6" sx={{ p: "10px" }}>
         Team name
       </Typography>
@@ -118,7 +168,7 @@ export const TeamCreator = React.memo(function TeamCreator({
           Cancel
         </Button>
         <Button variant="contained" onClick={handleCreate}>
-          {team ? "Save" : "Create"}
+          {team.id ? "Save" : "Create"}
         </Button>
       </Box>
     </Paper>

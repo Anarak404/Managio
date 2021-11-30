@@ -1,6 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, IconButton, Modal, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, Modal, Typography } from "@mui/material";
 import { useCallback, useState } from "react";
 import { ITeam } from "../../api/types";
 import { TeamCreator } from "./TeamCreator";
@@ -19,9 +19,7 @@ export function TeamDetailsHeader({ team, isOwner }: iProps) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Box sx={{ width: "200px", height: "200px", bgcolor: "yellow" }}>
-        {team.photo}
-      </Box>
+      <Avatar sx={{ width: "200px", height: "200px" }} alt="no photo" src={team.photo} />
       <Box
         sx={{
           flex: 1,

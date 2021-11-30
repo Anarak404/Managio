@@ -1,6 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, IconButton, Paper } from "@mui/material";
+import { Avatar, Box, IconButton, Paper } from "@mui/material";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { ITeam } from "../../api/types";
@@ -34,7 +34,10 @@ export function TeamItem({ team }: IProps) {
           color: "black",
         }}
       >
-        <Box sx={{ width: "110px" }}>{team.photo}</Box>
+        <Avatar
+          sx={{ width: "110px", height: "110px" }}
+          src={team.photo}
+        />
         <Box
           sx={{
             alignSelf: "center",

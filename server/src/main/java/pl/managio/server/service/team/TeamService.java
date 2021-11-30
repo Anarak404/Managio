@@ -1,5 +1,6 @@
 package pl.managio.server.service.team;
 
+import org.springframework.web.multipart.MultipartFile;
 import pl.managio.server.domain.User;
 import pl.managio.server.model.TeamDetailsModel;
 import pl.managio.server.model.TeamModel;
@@ -11,7 +12,7 @@ import java.util.Set;
 
 public interface TeamService {
 
-    Optional<TeamModel> createTeam(String name, String photo);
+    Optional<TeamModel> createTeam(String name, MultipartFile photo);
 
     Optional<TeamModel> createTeam(String name, String photo, List<User> users);
 
@@ -27,6 +28,6 @@ public interface TeamService {
 
     Optional<TeamDetailsModel> getTeam(Long id);
 
-    Optional<TeamModel> updateTeam(Long id, String name, String photo);
+    Optional<TeamModel> updateTeam(Long id, String name, MultipartFile photo);
 
 }
