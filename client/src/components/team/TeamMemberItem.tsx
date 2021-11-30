@@ -1,6 +1,10 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, IconButton } from "@mui/material";
+import { Avatar, Box, IconButton } from "@mui/material";
+import { useCallback, useContext } from "react";
+import { deleteMemberApi } from "../../api/team";
 import { IUser } from "../../api/types";
+import { appContext } from "../../AppContext";
+import { teamContext } from "../../contexts/TeamContext";
 
 interface IProps {
   member: IUser;
@@ -8,6 +12,21 @@ interface IProps {
 }
 
 export function TeamMemberItem({ member, canModify }: IProps) {
+  const { team } = useContext(teamContext);
+  const { me, getTeams } = useContext(appContext);
+
+  const handleDelete = useCallback(() => {
+    let teamId = 0;
+    if (!team) {
+      return;
+    }
+    teamId = team.id;
+
+    deleteMemberApi(teamId, member.id)
+      .then(() => getTeams())
+      .catch(() => {});
+  }, [team, member, getTeams]);
+
   return (
     <Box
       sx={{
@@ -20,21 +39,19 @@ export function TeamMemberItem({ member, canModify }: IProps) {
         },
       }}
     >
-      <Box
+      <Avatar
         sx={{
           height: "45px",
           width: "45px",
-          bgcolor: "yellow",
           margin: "10px",
         }}
-      >
-        {member.photo}
-      </Box>
+        src={member.photo}
+      />
       <Box sx={{ fontSize: "22px" }}>{member.name}</Box>
       <div style={{ flex: 1 }} />
-      {canModify && (
+      {canModify && member.email !== me?.email && (
         <Box sx={{ marginRight: "20px" }}>
-          <IconButton>
+          <IconButton onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
         </Box>
