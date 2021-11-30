@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
@@ -12,6 +13,6 @@ import java.util.Set;
 public class TeamMembersRequest {
 
     @NotEmpty
-    Set<String> membersEmails;
+    Set<@NotBlank String> emails;
 
 }

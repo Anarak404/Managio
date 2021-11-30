@@ -70,7 +70,7 @@ public class TeamController {
 
     @PostMapping("/{id}/members")
     public ResponseEntity<TeamDetailsModel> addMembers(@PathVariable Long id, @Valid @RequestBody TeamMembersRequest request) {
-        Set<String> emails = request.getMembersEmails();
+        Set<String> emails = request.getEmails();
 
         Optional<TeamDetailsModel> team = teamService.addMembers(id, emails);
         return team.map(t -> new ResponseEntity<>(t, HttpStatus.OK))

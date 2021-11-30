@@ -86,7 +86,7 @@ public class TeamServiceImpl implements TeamService {
     public Optional<TeamDetailsModel> addMembers(Long id, Set<String> emails) {
         User user = authenticationService.getCurrentUser();
         var team = teamRepository.findById(id);
-        if (team.isEmpty() || team.get().getOwner() != user) {
+        if (team.isEmpty() || !isOwner(team.get(), user)) {
             return Optional.empty();
         }
 

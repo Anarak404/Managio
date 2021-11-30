@@ -44,10 +44,6 @@ export class HttpClient {
 
     const body = this.getBody(contentType, data);
 
-    console.log('body ', body);
-    console.log('headers ', headers);
-    
-
     try {
       const response = await fetch(url, {
         method,

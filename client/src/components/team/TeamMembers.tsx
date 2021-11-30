@@ -1,5 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
+import { useCallback, useState } from "react";
 import { IUser } from "../../api/types";
+import { Invitation } from "./Invitation";
 import { TeamMemberItem } from "./TeamMemberItem";
 
 interface IProps {
@@ -8,6 +10,12 @@ interface IProps {
 }
 
 export function TeamMembers({ members, isOwner }: IProps) {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const toggleVisibility = useCallback(() => {
+    setOpen((s) => !s);
+  }, [setOpen]);
+
   return (
     <Box>
       <Box
@@ -19,7 +27,11 @@ export function TeamMembers({ members, isOwner }: IProps) {
         }}
       >
         <Typography sx={{ fontSize: "20px" }}>Members</Typography>
-        {isOwner && <Button variant="contained">Add Member</Button>}
+        {isOwner && (
+          <Button variant="contained" onClick={toggleVisibility}>
+            Add Members
+          </Button>
+        )}
       </Box>
       <Box
         sx={{
@@ -30,6 +42,9 @@ export function TeamMembers({ members, isOwner }: IProps) {
         {members.map((e) => (
           <TeamMemberItem key={e.email} member={e} canModify={isOwner} />
         ))}
+        <Modal open={open} onClose={toggleVisibility} sx={{ display: "flex" }}>
+          <Invitation closeModel={toggleVisibility} />
+        </Modal>
       </Box>
     </Box>
   );
