@@ -48,6 +48,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<TeamMember> teamUsers;
 
+    @OneToMany(mappedBy = "user")
+    List<Task> tasks;
+
     public User(String email, String name, String password) {
         this.email = email;
         this.name = name;

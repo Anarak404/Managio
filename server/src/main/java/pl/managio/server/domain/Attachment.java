@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
+import pl.managio.server.model.AttachmentType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,42 +15,26 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.sql.Timestamp;
-import java.util.List;
 
 @Getter
 @Setter
-@Entity(name = "team")
+@Entity(name = "attachment")
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Team {
+public class Attachment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false)
-    String name;
+    @Column
+    AttachmentType type;
 
     @Column
-    String photo;
-
-    @CreationTimestamp
-    Timestamp creationDateTime;
+    String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner", nullable = false)
-    User owner;
-
-    @OneToMany(mappedBy = "team")
-    List<TeamMember> users;
-
-    @OneToMany(mappedBy = "team")
-    List<Task> tasks;
-
-    public Team(String name) {
-        this.name = name;
-    }
+    @JoinColumn(name = "task_id", nullable = false)
+    Task task;
 
 }
