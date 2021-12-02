@@ -4,7 +4,8 @@ import {
   ITeam,
   ITeamDetails,
   ITeamMembersRequest,
-  ITeamRequest
+  ITeamRequest,
+  IUser
 } from "./types";
 
 export const getTeamsApi = async (): Promise<ITeam[]> => {
@@ -23,7 +24,7 @@ export const deleteTeamApi = async (id: number): Promise<IResultResponse> => {
   return httpClient.delete(`/app/teams/${id}`);
 };
 
-export const getMembersApi = async (id: number): Promise<ITeam[]> => {
+export const getMembersApi = async (id: number): Promise<IUser[]> => {
   return httpClient.get(`/app/teams/${id}/members`);
 };
 

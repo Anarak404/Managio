@@ -49,10 +49,11 @@ export function AppContextProvider({ children }: IAppContextProps) {
       try {
         const response = await checkLoginApi();
         setMe(response);
+        getTeams();
       } catch {}
     };
     asyncFunc();
-  }, [setMe]);
+  }, [setMe, getTeams]);
 
   return (
     <Provider

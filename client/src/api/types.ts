@@ -37,3 +37,22 @@ export interface ITeam {
 export interface ITeamDetails extends ITeam {
   teamMembers: IUser[];
 }
+
+export interface IConfig {
+  labels: ILabel[];
+  priorities: string[];
+}
+
+export interface ITask {
+  title: string;
+  description: string;
+  userId: number;
+  teamId: number;
+  priority: string;
+  labels: ILabel[];
+}
+
+export interface ILabel {
+  label: string;
+  exist: boolean;
+}

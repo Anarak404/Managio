@@ -10,6 +10,8 @@ import pl.managio.server.model.TaskStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,9 +38,11 @@ public class Task {
     @Column(nullable = false, columnDefinition = "text")
     String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     Priority priority;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     TaskStatus status;
 
@@ -56,13 +60,18 @@ public class Task {
     @OneToMany(mappedBy = "task")
     List<TaskLabel> taskLabels;
 
-    public Task(String title, String description, Team team, User user) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reporter_id", nullable = false)
+    User reporter;
+
+    public Task(String title, String description, Team team, User user, User reporter) {
         this.title = title;
         this.description = description;
         this.priority = Priority.MEDIUM;
         this.status = TaskStatus.TO_DO;
         this.team = team;
         this.user = user;
+        this.reporter = reporter;
     }
 
 }

@@ -45,6 +45,9 @@ public class User {
     @OneToMany(mappedBy = "owner")
     List<Team> teams;
 
+    @OneToMany(mappedBy = "reporter")
+    List<Task> reportedTasks;
+
     @OneToMany(mappedBy = "user")
     List<TeamMember> teamUsers;
 

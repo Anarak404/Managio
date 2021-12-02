@@ -1,15 +1,19 @@
 import { ExitToApp } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Divider,
   Drawer,
   IconButton,
   List,
   ListItemButton,
   ListItemText,
-  Toolbar,
+  Modal,
+  Toolbar
 } from "@mui/material";
+import { useCallback, useState } from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { TaskCreator } from "./task/TaskCreator";
 import { TasksView } from "./task/TasksView";
 import { TeamRoute } from "./team";
 import { TeamsView } from "./team/TeamsView";
@@ -21,10 +25,15 @@ const manuItems = [
   { name: "Teams", url: "/teams" },
   { name: "Issues", url: "/issues" },
   { name: "Search issues", url: "/search-issue" },
-  { name: "Create task", url: "/create-task" },
 ];
 
 export function MainView() {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const toggleVisibility = useCallback(() => {
+    setOpen((s) => !s);
+  }, [setOpen]);
+
   return (
     <Router>
       <Box sx={{ display: "flex", height: "100vh" }}>
@@ -66,6 +75,7 @@ export function MainView() {
               </Link>
             ))}
           </List>
+          <Button onClick={toggleVisibility}>Create task</Button>
           <Toolbar sx={{ flex: 1 }} />
           <Divider />
           <IconButton>
@@ -85,9 +95,11 @@ export function MainView() {
             <Route path="teams/team/:id" element={<TeamRoute />} />
             <Route path="issues" element={<TasksView />} />
             <Route path="search-issue" element={<TasksView />} />
-            <Route path="create-task" element={<TasksView />} />
           </Routes>
         </Box>
+        <Modal open={open} onClose={toggleVisibility} sx={{ display: "flex" }}>
+          <TaskCreator closeModal={toggleVisibility} />
+        </Modal>
       </Box>
     </Router>
   );
