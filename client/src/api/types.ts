@@ -36,6 +36,9 @@ export interface ITeam {
 
 export interface ITeamDetails extends ITeam {
   teamMembers: IUser[];
+  todoTasks: ITask[];
+  inProgressTasks: ITask[];
+  doneTasks: ITask[];
 }
 
 export interface IConfig {
@@ -43,13 +46,28 @@ export interface IConfig {
   priorities: string[];
 }
 
-export interface ITask {
+export interface ITaskRequest {
   title: string;
   description: string;
   userId: number;
   teamId: number;
   priority: string;
   labels: ILabel[];
+}
+
+export interface ITask {
+  id: number;
+  title: string;
+  priority: string;
+  labels: ILabel[];
+  assignedUser: IUser;
+}
+
+export interface ITaskDetails extends ITask {
+  description: string;
+  status: string;
+  reporter: IUser;
+  assignedTeam: ITeam;
 }
 
 export interface ILabel {

@@ -15,7 +15,7 @@ import React, {
 } from "react";
 import { createTaskApi, getConfigApi } from "../../api/task";
 import { getMembersApi } from "../../api/team";
-import { ILabel, ITask, ITeam, IUser } from "../../api/types";
+import { ILabel, ITaskRequest, ITeam, IUser } from "../../api/types";
 import { appContext } from "../../AppContext";
 import { LabelSelector } from "./LabelSelector";
 
@@ -107,7 +107,7 @@ export function TaskCreator({ closeModal }: IProps) {
       { label: "vsdvsd", exist: false },
     ];
 
-    const credentials: ITask = {
+    const credentials: ITaskRequest = {
       title,
       description,
       userId,
