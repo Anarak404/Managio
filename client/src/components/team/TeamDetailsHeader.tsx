@@ -19,7 +19,7 @@ export function TeamDetailsHeader({ team, isOwner }: iProps) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Avatar sx={{ width: "200px", height: "200px" }} alt="no photo" src={team.photo} />
+      <Avatar sx={{ width: "200px", height: "200px" }} src={team.photo} />
       <Box
         sx={{
           flex: 1,
@@ -51,9 +51,7 @@ export function TeamDetailsHeader({ team, isOwner }: iProps) {
         >
           <Box>Owner</Box>
           <Box sx={{ display: "flex", gap: "10px" }}>
-            <Box sx={{ width: "60px", height: "60px", bgcolor: "red" }}>
-              {team.owner.photo}
-            </Box>
+            <Avatar src={team.owner.photo} />
             <Typography sx={{ alignSelf: "center" }}>
               {team.owner.name}
             </Typography>
