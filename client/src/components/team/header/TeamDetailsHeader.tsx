@@ -2,8 +2,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Avatar, Box, IconButton, Modal, Typography } from "@mui/material";
 import { useCallback, useState } from "react";
-import { ITeam } from "../../api/types";
-import { TeamCreator } from "./TeamCreator";
+import { ITeam } from "../../../api/types";
+import { TeamCreator } from "../TeamCreator";
 
 interface iProps {
   team: ITeam;

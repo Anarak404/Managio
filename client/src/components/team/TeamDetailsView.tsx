@@ -2,9 +2,9 @@ import { Box, CircularProgress } from "@mui/material";
 import React, { useContext } from "react";
 import { appContext } from "../../AppContext";
 import { teamContext } from "../../contexts/TeamContext";
+import { TeamDetailsHeader } from "./header/TeamDetailsHeader";
+import { TeamMembers } from "./members/TeamMembers";
 import { TasksBoard } from "./task-board/TasksBoard";
-import { TeamDetailsHeader } from "./TeamDetailsHeader";
-import { TeamMembers } from "./TeamMembers";
 
 export function TeamDetailsView() {
   const { me } = useContext(appContext);

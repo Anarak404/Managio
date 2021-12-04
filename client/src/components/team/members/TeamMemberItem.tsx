@@ -1,10 +1,10 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar, Box, IconButton } from "@mui/material";
 import { useCallback, useContext } from "react";
-import { deleteMemberApi } from "../../api/team";
-import { IUser } from "../../api/types";
-import { appContext } from "../../AppContext";
-import { teamContext } from "../../contexts/TeamContext";
+import { deleteMemberApi } from "../../../api/team";
+import { IUser } from "../../../api/types";
+import { appContext } from "../../../AppContext";
+import { teamContext } from "../../../contexts/TeamContext";
 
 interface IProps {
   member: IUser;

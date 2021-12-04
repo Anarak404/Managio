@@ -1,10 +1,10 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, IconButton, Paper, TextField } from "@mui/material";
 import React, { useCallback, useContext, useRef, useState } from "react";
-import { addMembersApi } from "../../api/team";
-import { ITeamMembersRequest } from "../../api/types";
-import { appContext } from "../../AppContext";
-import { teamContext } from "../../contexts/TeamContext";
+import { addMembersApi } from "../../../api/team";
+import { ITeamMembersRequest } from "../../../api/types";
+import { appContext } from "../../../AppContext";
+import { teamContext } from "../../../contexts/TeamContext";
 import { InvitationItem } from "./InvitationItem";
 
 interface IProps {

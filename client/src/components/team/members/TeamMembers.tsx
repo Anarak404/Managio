@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { useCallback, useState } from "react";
-import { IUser } from "../../api/types";
+import { IUser } from "../../../api/types";
 import { Invitation } from "./Invitation";
 import { TeamMemberItem } from "./TeamMemberItem";
 
