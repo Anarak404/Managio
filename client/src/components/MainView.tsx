@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useCallback, useState } from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { DashboardView } from "./dashboard/DashboardView";
 import { TaskCreator } from "./task/TaskCreator";
 import { TasksView } from "./task/TasksView";
 import { TeamRoute } from "./team";
@@ -90,7 +91,7 @@ export function MainView() {
           }}
         >
           <Routes>
-            <Route path="dashboard" element={<TasksView />} />
+            <Route path="dashboard" element={<DashboardView />} />
             <Route path="teams" element={<TeamsView />} />
             <Route path="teams/team/:id" element={<TeamRoute />} />
             <Route path="issues" element={<TasksView />} />

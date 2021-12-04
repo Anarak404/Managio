@@ -8,6 +8,8 @@ import pl.managio.server.dto.request.TaskDataRequest;
 import pl.managio.server.dto.response.ConfigResponse;
 import pl.managio.server.model.LabelModel;
 import pl.managio.server.model.Priority;
+import pl.managio.server.model.TaskPackage;
+import pl.managio.server.model.TaskStatus;
 import pl.managio.server.repository.LabelRepository;
 import pl.managio.server.repository.TaskRepository;
 import pl.managio.server.repository.TeamRepository;
@@ -30,7 +32,7 @@ public class TaskServiceImpl implements TaskService {
     private final LabelRepository labelRepository;
     private final AuthenticationService authenticationService;
 
-//    TODO: add labels to task
+    //    TODO: add labels to task
     @Override
     public Optional<Task> createTask(TaskDataRequest data) {
         var team = teamRepository.findById(data.getTeamId());
@@ -52,10 +54,33 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public TaskPackage getTasksAssignedToUser() {
+        User user = authenticationService.getCurrentUser();
+        return new TaskPackage(taskRepository.getTasksForUser(user));
+    }
+
+    @Override
+    public boolean changeTaskStatus(long id, String newStatus) {
+        User user = authenticationService.getCurrentUser();
+        var task = taskRepository.findById(id);
+        if (task.isEmpty() || !canModify(task.get(), user)) {
+            return false;
+        }
+        Task t = task.get();
+        t.setStatus(TaskStatus.valueOf(newStatus));
+        try {
+            taskRepository.save(t);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public ConfigResponse getConfig() {
         var iterable = labelRepository.findAll();
 
-       var labels = StreamSupport.stream(iterable.spliterator(), false)
+        var labels = StreamSupport.stream(iterable.spliterator(), false)
                 .map(LabelModel::new)
                 .collect(Collectors.toSet());
 
@@ -64,6 +89,10 @@ public class TaskServiceImpl implements TaskService {
                 .collect(Collectors.toSet());
 
         return new ConfigResponse(labels, priorities);
+    }
+
+    private boolean canModify(Task task, User user) {
+        return task.getUser().getId().equals(user.getId()) || task.getReporter().getId().equals(user.getId());
     }
 
 }

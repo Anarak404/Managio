@@ -27,9 +27,9 @@ export function TeamDetailsView() {
             isOwner={team.owner.email === me?.email}
           />
           <TasksBoard
-            todoTasks={team.todoTasks}
-            inProgressTasks={team.inProgressTasks}
-            doneTasks={team.doneTasks}
+            todoTasks={team.tasks.todoTasks}
+            inProgressTasks={team.tasks.inProgressTasks}
+            doneTasks={team.tasks.doneTasks}
           />
           <TeamMembers
             members={team.teamMembers}

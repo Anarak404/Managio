@@ -1,3 +1,5 @@
+import { Status } from "../components/dashboard/DashboardView";
+
 export interface ISignInRequest {
   email: string;
   password: string;
@@ -36,9 +38,7 @@ export interface ITeam {
 
 export interface ITeamDetails extends ITeam {
   teamMembers: IUser[];
-  todoTasks: ITask[];
-  inProgressTasks: ITask[];
-  doneTasks: ITask[];
+  tasks: ITaskPackage;
 }
 
 export interface IConfig {
@@ -59,18 +59,28 @@ export interface ITask {
   id: number;
   title: string;
   priority: string;
+  status: Status;
   labels: ILabel[];
   assignedUser: IUser;
 }
 
 export interface ITaskDetails extends ITask {
   description: string;
-  status: string;
   reporter: IUser;
   assignedTeam: ITeam;
+}
+
+export interface ITaskPackage {
+  todoTasks: ITask[];
+  inProgressTasks: ITask[];
+  doneTasks: ITask[];
 }
 
 export interface ILabel {
   label: string;
   exist: boolean;
+}
+
+export interface IName {
+  name: Status;
 }
