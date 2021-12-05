@@ -5,11 +5,12 @@ import {
   styled,
   useAutocomplete
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { ILabel } from "../../api/types";
 
 interface IProps {
   labels: ILabel[];
+  handleLabels(l: ILabel[]): void;
 }
 
 const Label = styled("label")`
@@ -154,7 +155,7 @@ const Listbox = styled("ul")(
 `
 );
 
-export function LabelSelector({ labels }: IProps) {
+export function LabelSelector({ labels, handleLabels }: IProps) {
   const {
     getRootProps,
     getInputLabelProps,
@@ -171,6 +172,10 @@ export function LabelSelector({ labels }: IProps) {
     options: labels,
     getOptionLabel: (option) => option.label,
   });
+
+  useEffect(() => {
+    handleLabels(value);
+  }, [handleLabels, value]);
 
   return (
     <React.Fragment>

@@ -26,4 +26,8 @@ public class Label {
     @Column
     String name;
 
+    public Label(String name) {
+        this.name = name;
+    }
+
 }

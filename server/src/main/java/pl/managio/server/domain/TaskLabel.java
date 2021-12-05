@@ -36,6 +36,7 @@ public class TaskLabel {
     public TaskLabel(Task task, Label label) {
         this.task = task;
         this.label = label;
+        this.id = new TaskLabelKey(task.getId(), label.getId());
     }
 
 }

@@ -29,6 +29,7 @@ export function TaskCreator({ closeModal }: IProps) {
   const [members, setMembers] = useState<IUser[]>([]);
   const [message, setMessage] = useState<string>();
   const [selectedPriority, setSelectedPriotity] = useState<string>("");
+  const [selectedLabels, setSelectedLabels] = useState<ILabel[]>([]);
   const [assignedTeam, setAssignedTeam] = useState<ITeam>();
   const [assignedUser, setAssignedUser] = useState<IUser>();
 
@@ -43,6 +44,10 @@ export function TaskCreator({ closeModal }: IProps) {
     } else {
       setSelectedPriotity("");
     }
+  };
+
+  const handleLabels = (labels: ILabel[]) => {
+    setSelectedLabels(labels);
   };
 
   const assigneeTeam = useCallback(
@@ -102,10 +107,7 @@ export function TaskCreator({ closeModal }: IProps) {
     const userId = assignedUser.id;
     const priority = selectedPriority ? selectedPriority : "";
 
-    const labels: ILabel[] = [
-      { label: "aaaa", exist: false },
-      { label: "vsdvsd", exist: false },
-    ];
+    const labels: ILabel[] = selectedLabels;
 
     const credentials: ITaskRequest = {
       title,
@@ -119,7 +121,14 @@ export function TaskCreator({ closeModal }: IProps) {
     createTaskApi(credentials)
       .then(() => closeModal())
       .catch(() => setMessage("Operation failed!"));
-  }, [setMessage, assignedUser, assignedTeam, selectedPriority, closeModal]);
+  }, [
+    setMessage,
+    assignedUser,
+    assignedTeam,
+    selectedPriority,
+    selectedLabels,
+    closeModal,
+  ]);
 
   useEffect(() => {
     getConfigApi()
@@ -188,7 +197,7 @@ export function TaskCreator({ closeModal }: IProps) {
           )}
         />
       </Box>
-      <LabelSelector labels={labels} />
+      <LabelSelector labels={labels} handleLabels={handleLabels} />
       {message && (
         <Typography sx={{ alignSelf: "center", color: "red" }}>
           {message}

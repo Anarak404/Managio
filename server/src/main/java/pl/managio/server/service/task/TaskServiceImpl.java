@@ -2,7 +2,9 @@ package pl.managio.server.service.task;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.managio.server.domain.Label;
 import pl.managio.server.domain.Task;
+import pl.managio.server.domain.TaskLabel;
 import pl.managio.server.domain.User;
 import pl.managio.server.dto.request.TaskDataRequest;
 import pl.managio.server.dto.response.ConfigResponse;
@@ -11,12 +13,14 @@ import pl.managio.server.model.Priority;
 import pl.managio.server.model.TaskPackage;
 import pl.managio.server.model.TaskStatus;
 import pl.managio.server.repository.LabelRepository;
+import pl.managio.server.repository.TaskLabelRepository;
 import pl.managio.server.repository.TaskRepository;
 import pl.managio.server.repository.TeamRepository;
 import pl.managio.server.repository.UserRepository;
 import pl.managio.server.service.authentication.AuthenticationService;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,9 +34,9 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final LabelRepository labelRepository;
+    private final TaskLabelRepository taskLabelRepository;
     private final AuthenticationService authenticationService;
 
-    //    TODO: add labels to task
     @Override
     public Optional<Task> createTask(TaskDataRequest data) {
         var team = teamRepository.findById(data.getTeamId());
@@ -47,6 +51,7 @@ public class TaskServiceImpl implements TaskService {
 
         try {
             taskRepository.save(task);
+            addLabelsToTask(task, data.getLabels());
             return Optional.of(task);
         } catch (Exception e) {
             return Optional.empty();
@@ -93,6 +98,20 @@ public class TaskServiceImpl implements TaskService {
 
     private boolean canModify(Task task, User user) {
         return task.getUser().getId().equals(user.getId()) || task.getReporter().getId().equals(user.getId());
+    }
+
+    private void addLabelsToTask(Task task, List<LabelModel> labels) {
+        labels.forEach(l -> {
+            Label label;
+            if (l.isExist()) {
+                label = labelRepository.getLabelByName(l.getLabel());
+            } else {
+                label = new Label(l.getLabel());
+                labelRepository.save(label);
+            }
+            TaskLabel taskLabel = new TaskLabel(task, label);
+            taskLabelRepository.save(taskLabel);
+        });
     }
 
 }
