@@ -21,7 +21,20 @@ export function TaskItem({ task }: IProps) {
         <Typography variant="h6" sx={{ mt: "10px", ml: "15px" }}>
           {task.title}
         </Typography>
-        <Box sx={{ p: "10px", marginTop: "auto" }}>labels</Box>
+        <Box sx={{ p: "10px", marginTop: "auto", display: "flex", gap: "4px" }}>
+          {task.labels.map((l) => (
+            <Box
+              sx={{
+                bgcolor: "antiquewhite",
+                borderRadius: "5px",
+                px: "3px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {l.label}
+            </Box>
+          ))}
+        </Box>
       </Box>
       <Box sx={{ alignSelf: "center", px: "10px" }}>
         <Typography>{task.priority}</Typography>
