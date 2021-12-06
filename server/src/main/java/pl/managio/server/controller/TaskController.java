@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.managio.server.domain.Task;
 import pl.managio.server.dto.request.NameRequest;
@@ -20,6 +21,7 @@ import pl.managio.server.model.TaskPackage;
 import pl.managio.server.service.task.TaskService;
 
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
@@ -40,6 +42,13 @@ public class TaskController {
         Optional<Task> task = taskService.createTask(request);
         return new ResponseEntity<>(new ResultResponse(task.isPresent()),
                 task.isPresent() ? HttpStatus.CREATED : HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Map<String, Object>> getAllTasks(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "15") int size) {
+        var tasks = taskService.getTasksVisibleForUser(page, size);
+        return new ResponseEntity<>(tasks, tasks.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK);
     }
 
     @PutMapping("/{id}/status")

@@ -15,4 +15,7 @@ public interface TeamRepository extends CrudRepository<Team, Long> {
     @Query("select t from team t join fetch t.users u where u.user = :user")
     List<Team> getTeamsForUser(@Param("user") User user);
 
+    @Query("select t.id from team t join t.users u where u.user = :user")
+    List<Long> getTeamsIdForUser(@Param("user") User user);
+
 }

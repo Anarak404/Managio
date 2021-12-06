@@ -1,6 +1,9 @@
 package pl.managio.server.service.task;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.managio.server.domain.Label;
 import pl.managio.server.domain.Task;
@@ -10,6 +13,7 @@ import pl.managio.server.dto.request.TaskDataRequest;
 import pl.managio.server.dto.response.ConfigResponse;
 import pl.managio.server.model.LabelModel;
 import pl.managio.server.model.Priority;
+import pl.managio.server.model.TaskModel;
 import pl.managio.server.model.TaskPackage;
 import pl.managio.server.model.TaskStatus;
 import pl.managio.server.repository.LabelRepository;
@@ -20,7 +24,10 @@ import pl.managio.server.repository.UserRepository;
 import pl.managio.server.service.authentication.AuthenticationService;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,6 +69,29 @@ public class TaskServiceImpl implements TaskService {
     public TaskPackage getTasksAssignedToUser() {
         User user = authenticationService.getCurrentUser();
         return new TaskPackage(taskRepository.getTasksForUser(user));
+    }
+
+    @Override
+    public Map<String, Object> getTasksVisibleForUser(int page, int size) {
+        User user = authenticationService.getCurrentUser();
+        List<Long> teamsId = teamRepository.getTeamsIdForUser(user);
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<Task> pageTasks = taskRepository.getTasksVisibleForUser(user, teamsId, paging);
+            List<TaskModel> tasks = pageTasks.getContent().stream()
+                    .map(TaskModel::new)
+                    .collect(Collectors.toList());
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("tasks", tasks);
+            result.put("currentPage", pageTasks.getNumber());
+            result.put("totalItems", pageTasks.getTotalElements());
+            result.put("totalPages", pageTasks.getTotalPages());
+
+            return result;
+        } catch (Exception e) {
+            return Collections.emptyMap();
+        }
     }
 
     @Override
