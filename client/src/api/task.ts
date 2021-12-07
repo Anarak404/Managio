@@ -2,7 +2,10 @@ import { httpClient } from "./client";
 import {
   IConfig,
   IName,
-  IResultResponse, ITaskPackage,
+  IParams,
+  IResultResponse,
+  ITaskPackage,
+  ITaskPageable,
   ITaskRequest
 } from "./types";
 
@@ -18,6 +21,10 @@ export const createTaskApi = async (
 
 export const getTasksAssignedToUserApi = async (): Promise<ITaskPackage> => {
   return httpClient.get("/app/tasks");
+};
+
+export const getAllTasksApi = async (data: IParams): Promise<ITaskPageable> => {
+  return httpClient.get("/app/tasks/all", data);
 };
 
 export const changeTaskStatusApi = async (

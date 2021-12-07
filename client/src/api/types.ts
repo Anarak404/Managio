@@ -84,3 +84,15 @@ export interface ILabel {
 export interface IName {
   name: Status;
 }
+
+export interface IParams {
+  page: number;
+  size: number;
+}
+
+export interface ITaskPageable {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  tasks: ITask[];
+}

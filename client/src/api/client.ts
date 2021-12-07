@@ -1,12 +1,13 @@
 import { ErrorResponse, IError, mapToErrorResponse } from "./error";
+import { IParams } from "./types";
 
 type ContentType = "application/json" | "multipart/form-data";
 
 export class HttpClient {
   private static apiUrl = "http://localhost:8080";
 
-  public async get<T>(url: string): Promise<T> {
-    return this.send(url, "GET", undefined);
+  public async get<T>(url: string, params?: IParams): Promise<T> {
+    return this.send(url, "GET", undefined, undefined, params);
   }
 
   public async post<T>(
@@ -33,9 +34,17 @@ export class HttpClient {
     url: string,
     method: "POST" | "PUT" | "GET" | "DELETE",
     data?: any,
-    contentType = "application/json" as ContentType
+    contentType = "application/json" as ContentType,
+    params?: IParams
   ): Promise<T> {
     url = this.prepareUrl(url);
+    if (params) {
+      const urlParams = this.mapParams(params);
+      if (urlParams.length > 0) {
+        url += `?${urlParams.join("&")}`;
+      }
+    }
+
     const headers = new Headers();
 
     if (contentType === "application/json") {
@@ -90,6 +99,19 @@ export class HttpClient {
     }
 
     throw new ErrorResponse(data as IError);
+  }
+
+  private mapParams(params: any) {
+    return Object.entries(params)
+      .map(([key, v]) => {
+        const value = v as string;
+        if (!value || typeof value === "object") {
+          return undefined;
+        }
+
+        return `${encodeURI(key)}=${encodeURI(value)}`;
+      })
+      .filter((e) => !!e);
   }
 }
 
