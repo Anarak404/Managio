@@ -4,6 +4,7 @@ import {
   IName,
   IParams,
   IResultResponse,
+  ITaskDetails,
   ITaskPackage,
   ITaskPageable,
   ITaskRequest
@@ -17,6 +18,10 @@ export const createTaskApi = async (
   data: ITaskRequest
 ): Promise<IResultResponse> => {
   return httpClient.post("/app/tasks/create", data);
+};
+
+export const getTaskApi = async (id: number): Promise<ITaskDetails> => {
+  return httpClient.get(`/app/tasks/${id}`);
 };
 
 export const getTasksAssignedToUserApi = async (): Promise<ITaskPackage> => {
