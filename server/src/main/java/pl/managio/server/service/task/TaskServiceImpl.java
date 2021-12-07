@@ -13,6 +13,7 @@ import pl.managio.server.dto.request.TaskDataRequest;
 import pl.managio.server.dto.response.ConfigResponse;
 import pl.managio.server.model.LabelModel;
 import pl.managio.server.model.Priority;
+import pl.managio.server.model.TaskDetailsModel;
 import pl.managio.server.model.TaskModel;
 import pl.managio.server.model.TaskPackage;
 import pl.managio.server.model.TaskStatus;
@@ -63,6 +64,11 @@ public class TaskServiceImpl implements TaskService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<TaskDetailsModel> getTask(long id) {
+        return taskRepository.findById(id).map(TaskDetailsModel::new);
     }
 
     @Override

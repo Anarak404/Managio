@@ -17,6 +17,7 @@ import pl.managio.server.dto.request.NameRequest;
 import pl.managio.server.dto.request.TaskDataRequest;
 import pl.managio.server.dto.response.ConfigResponse;
 import pl.managio.server.dto.response.ResultResponse;
+import pl.managio.server.model.TaskDetailsModel;
 import pl.managio.server.model.TaskPackage;
 import pl.managio.server.service.task.TaskService;
 
@@ -43,6 +44,14 @@ public class TaskController {
         return new ResponseEntity<>(new ResultResponse(task.isPresent()),
                 task.isPresent() ? HttpStatus.CREATED : HttpStatus.FORBIDDEN);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskDetailsModel> getTask(@PathVariable Long id) {
+        Optional<TaskDetailsModel> task = taskService.getTask(id);
+        return task.map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
 
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllTasks(@RequestParam(defaultValue = "0") int page,
