@@ -4,31 +4,15 @@ import {
   Button,
   CircularProgress,
   Divider,
-  Typography
+  Typography,
 } from "@mui/material";
 import React, { useContext } from "react";
-import { ITaskDetails } from "../../api/types";
 import { appContext } from "../../AppContext";
+import { taskContext } from "../../contexts/TaskContext";
 
 export function Task() {
   const { me } = useContext(appContext);
-
-  const task: ITaskDetails = {
-    assignedTeam: {
-      id: 0,
-      name: "dsvs",
-      owner: me!,
-      photo: "asfa",
-    },
-    assignedUser: me!,
-    description: "fdf",
-    id: 2,
-    labels: [],
-    priority: "gweg",
-    reporter: me!,
-    status: "DONE",
-    title: "dvd",
-  };
+  const { task } = useContext(taskContext);
 
   return (
     <Box
