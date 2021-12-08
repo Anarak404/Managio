@@ -10,6 +10,7 @@ import {
   TableRow
 } from "@mui/material";
 import React from "react";
+import { Link } from "react-router-dom";
 import { IParams, ITask } from "../../../api/types";
 import { EnhancedTableHead } from "./EnhancedTableHead";
 
@@ -49,7 +50,7 @@ function getComparator<
 export function TaskTable({ tasks, handleDecision, totalItems }: IProps) {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof SortableKey>("title");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [selected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -60,26 +61,6 @@ export function TaskTable({ tasks, handleDecision, totalItems }: IProps) {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
-
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -125,9 +106,11 @@ export function TaskTable({ tasks, handleDecision, totalItems }: IProps) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.title)}
                       tabIndex={-1}
                       key={row.id}
+                      component={Link}
+                      to={`issue/${row.id}`}
+                      sx={{ textDecoration: "none" }}
                     >
                       <TableCell component="th" scope="row">
                         {row.title}
