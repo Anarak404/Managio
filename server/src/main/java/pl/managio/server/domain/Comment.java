@@ -42,8 +42,10 @@ public class Comment {
     @JoinColumn(name = "task", nullable = false)
     Task task;
 
-    public Comment(String description) {
+    public Comment(String description, User user, Task task) {
         this.description = description;
+        this.user = user;
+        this.task = task;
     }
 
 }
