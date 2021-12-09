@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
-@Entity
+@Entity(name = "comment")
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Comment {
