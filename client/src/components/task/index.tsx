@@ -1,9 +1,15 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { TaskContextProvider } from "../../contexts/TaskContext";
+import { taskContext, TaskContextProvider } from "../../contexts/TaskContext";
 import { Task } from "./Task";
 
 type Params = "id";
+
+function Wrapper() {
+  const { task } = useContext(taskContext);
+
+  return task ? <Task task={task} /> : null;
+}
 
 export function TaskRoute() {
   const { id } = useParams<Params>();
@@ -24,7 +30,7 @@ export function TaskRoute() {
 
   return (
     <TaskContextProvider id={+id}>
-      <Task />
+      <Wrapper />
     </TaskContextProvider>
   );
 }

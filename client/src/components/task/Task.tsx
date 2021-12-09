@@ -4,15 +4,35 @@ import {
   Button,
   CircularProgress,
   Divider,
-  Typography,
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography
 } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
+import { IName, ITaskDetails } from "../../api/types";
 import { appContext } from "../../AppContext";
 import { taskContext } from "../../contexts/TaskContext";
+import { Status } from "../dashboard/DashboardView";
 
-export function Task() {
+const options: string[] = ["TO_DO", "IN_PROGRESS", "DONE"];
+
+interface IProps {
+  task: ITaskDetails;
+}
+
+export function Task({ task }: IProps) {
   const { me } = useContext(appContext);
-  const { task } = useContext(taskContext);
+  const { changeStatus } = useContext(taskContext);
+
+  const handleChange = useCallback(
+    (event: SelectChangeEvent) => {
+      const data: IName = { name: event.target.value as Status };
+      changeStatus(data);
+    },
+    [changeStatus]
+  );
 
   return (
     <Box
@@ -93,14 +113,30 @@ export function Task() {
                 gap: "10px",
               }}
             >
-              <Box sx={{ display: "flex", width: "180px" }}>
-                <Button
-                  variant="contained"
-                  sx={{ p: "10px 30px" }}
-                  color="primary"
-                >
-                  {task.status}
-                </Button>
+              <Box
+                sx={{
+                  display: "flex",
+                  width: "180px",
+                }}
+              >
+                {task.assignedUser.id === me?.id ? (
+                  <FormControl fullWidth>
+                    <Select
+                      value={task.status}
+                      onChange={handleChange}
+                      displayEmpty
+                      sx={{ bgcolor: "primary.main", color: "#fff" }}
+                    >
+                      {options.map((o) => (
+                        <MenuItem value={o} key={o}>
+                          {o}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ) : (
+                  <Button variant="contained">{task.status}</Button>
+                )}
               </Box>
               <Divider />
               <Box sx={{ display: "flex", alignItems: "center" }}>
