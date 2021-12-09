@@ -54,6 +54,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Task> tasks;
 
+    @OneToMany(mappedBy = "user")
+    List<Comment> comments;
+
     public User(String email, String name, String password) {
         this.email = email;
         this.name = name;

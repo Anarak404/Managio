@@ -64,6 +64,9 @@ public class Task {
     @JoinColumn(name = "reporter_id", nullable = false)
     User reporter;
 
+    @OneToMany(mappedBy = "task")
+    List<Comment> comment;
+
     public Task(String title, String description, Team team, User user, User reporter) {
         this.title = title;
         this.description = description;
