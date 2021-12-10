@@ -3,8 +3,8 @@ package pl.managio.server.model;
 import lombok.Value;
 import pl.managio.server.domain.Task;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Value
@@ -14,7 +14,7 @@ public class TaskPackage {
     Set<TaskModel> inProgressTasks = new HashSet<>();
     Set<TaskModel> doneTasks = new HashSet<>();
 
-    public TaskPackage(List<Task> tasks) {
+    public TaskPackage(Collection<Task> tasks) {
         tasks.forEach(task -> {
             if (task.getStatus() == TaskStatus.TO_DO) {
                 todoTasks.add(new TaskModel(task));

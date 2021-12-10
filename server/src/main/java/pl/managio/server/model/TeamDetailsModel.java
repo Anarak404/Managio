@@ -4,14 +4,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import pl.managio.server.domain.Team;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Value
 public class TeamDetailsModel extends TeamModel {
 
-    List<UserModel> teamMembers;
+    Set<UserModel> teamMembers;
     TaskPackage tasks;
 
     public TeamDetailsModel(Team team) {
@@ -19,7 +19,7 @@ public class TeamDetailsModel extends TeamModel {
         this.teamMembers = team.getUsers().stream()
                 .filter(teamMember -> !teamMember.isDeleted())
                 .map(u -> new UserModel(u.getUser()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         this.tasks = new TaskPackage(team.getTasks());
     }
 
