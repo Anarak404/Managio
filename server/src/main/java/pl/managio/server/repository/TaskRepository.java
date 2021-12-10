@@ -17,7 +17,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("select t from task t where t.user = :user")
     List<Task> getTasksForUser(@Param("user") User user);
 
-    @Query("select t from task t where t.user = :user or t.reporter = :user or t.team.id in (:teamsId)")
+    @Query(value = "select t from task t left join fetch t.taskLabels left join fetch t.user where t.user = :user or t.reporter = :user or t.team.id in (:teamsId)",
+            countQuery = "select count(t) from task t left join t.taskLabels left join t.user where t.user = :user or t.reporter = :user or t.team.id in (:teamsId)")
     Page<Task> getTasksVisibleForUser(@Param("user") User user, @Param("teamsId") List<Long> teamsId, Pageable pageable);
 
 }
