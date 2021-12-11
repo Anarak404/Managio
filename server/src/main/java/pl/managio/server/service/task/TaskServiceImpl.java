@@ -219,11 +219,11 @@ public class TaskServiceImpl implements TaskService {
             case TITLE:
                 switch (filterValue.getOperator()) {
                     case EQ:
-                        return criteriaBuilder.like(root.get("title"),
-                                "%" + filterValue.getValue() + "%");
+                        return criteriaBuilder.like(criteriaBuilder.lower(root.get("title")),
+                                "%" + filterValue.getValue().toLowerCase() + "%");
                     case NOT_EQ:
-                        return criteriaBuilder.not(criteriaBuilder.like(root.get("title"),
-                                "%" + filterValue.getValue() + "%"));
+                        return criteriaBuilder.not(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")),
+                                "%" + filterValue.getValue().toLowerCase() + "%"));
                     default:
                         return null;
                 }
