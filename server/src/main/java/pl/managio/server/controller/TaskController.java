@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.managio.server.domain.Task;
 import pl.managio.server.dto.request.NameRequest;
+import pl.managio.server.dto.request.SearchTaskRequest;
 import pl.managio.server.dto.request.TaskDataRequest;
 import pl.managio.server.dto.response.ConfigResponse;
 import pl.managio.server.dto.response.ResultResponse;
@@ -52,6 +53,13 @@ public class TaskController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @PostMapping("/filter")
+    public ResponseEntity<Map<String, Object>> getFilteredTasks(@RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "15") int size,
+                                                                @Valid @RequestBody SearchTaskRequest req) {
+        var tasks = taskService.getSearchResults(req, page, size);
+        return new ResponseEntity<>(tasks, tasks.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK);
+    }
 
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllTasks(@RequestParam(defaultValue = "0") int page,
