@@ -110,3 +110,21 @@ export interface IFilterValue {
 export interface ISearchTaskRequest {
   filters: IFilterValue[];
 }
+
+export interface IComment {
+  id: number;
+  description: string;
+  user: IUser;
+  time: Date;
+}
+
+export interface ICreateCommentRequest {
+  description: string;
+}
+
+export interface ICommentPageable {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  comments: IComment[];
+}
