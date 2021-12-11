@@ -7,7 +7,7 @@ import {
   TableCell,
   TableContainer,
   TablePagination,
-  TableRow
+  TableRow,
 } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -18,64 +18,25 @@ interface IProps {
   tasks: ITask[];
   handleDecision(data: IParams): void;
   totalItems: number;
+  page: number;
+  rowsPerPage: number;
 }
 
-export type Order = "asc" | "desc";
-export type SortableKey = Omit<ITask, "id" | "labels" | "assignedUser">;
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator<
-  Key extends keyof Omit<ITask, "id" | "labels" | "assignedUser">
->(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-export function TaskTable({ tasks, handleDecision, totalItems }: IProps) {
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof SortableKey>("title");
-  const [selected] = React.useState<readonly string[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof SortableKey
-  ) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
+export function TaskTable({
+  tasks,
+  handleDecision,
+  totalItems,
+  page,
+  rowsPerPage,
+}: IProps) {
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-    const data: IParams = { page: newPage, size: rowsPerPage };
-    handleDecision(data);
+    handleDecision({ page: newPage, size: rowsPerPage });
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-    const data: IParams = { page: 0, size: parseInt(event.target.value) };
-    handleDecision(data);
+    handleDecision({ page: 0, size: parseInt(event.target.value) });
   };
 
   const emptyRows =
@@ -90,19 +51,11 @@ export function TaskTable({ tasks, handleDecision, totalItems }: IProps) {
             aria-labelledby="tableTitle"
             size="small"
           >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={tasks.length}
-            />
+            <EnhancedTableHead />
             <TableBody>
               {tasks
-                .slice()
-                .sort(getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((row) => {
                   return (
                     <TableRow
                       hover
