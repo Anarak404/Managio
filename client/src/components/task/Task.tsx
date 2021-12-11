@@ -8,13 +8,14 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Typography
+  Typography,
 } from "@mui/material";
 import React, { useCallback, useContext } from "react";
 import { IName, ITaskDetails } from "../../api/types";
 import { appContext } from "../../AppContext";
 import { taskContext } from "../../contexts/TaskContext";
 import { Status } from "../dashboard/DashboardView";
+import { CommentsView } from "./comments/CommentsView";
 
 const options: string[] = ["TO_DO", "IN_PROGRESS", "DONE"];
 
@@ -72,17 +73,7 @@ export function Task({ task }: IProps) {
             >
               Attachments
             </Box>
-            <Typography variant="subtitle1">Comments</Typography>
-            <Box
-              sx={{
-                border: "1px solid #9d977a",
-                borderRadius: "5px",
-                fontSize: "18px",
-                p: "10px",
-              }}
-            >
-              Comments
-            </Box>
+            <CommentsView id={task.id} />
           </Box>
           <Divider flexItem orientation="vertical" />
           <Box
