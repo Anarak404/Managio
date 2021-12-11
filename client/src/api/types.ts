@@ -96,3 +96,17 @@ export interface ITaskPageable {
   currentPage: number;
   tasks: ITask[];
 }
+
+export type AllowedOperators = "EQ" | "NOT_EQ";
+
+export type AcceptedField = "TITLE" | "PRIORITY" | "STATUS";
+
+export interface IFilterValue {
+  field: AcceptedField;
+  value: string;
+  operator: AllowedOperators;
+}
+
+export interface ISearchTaskRequest {
+  filters: IFilterValue[];
+}

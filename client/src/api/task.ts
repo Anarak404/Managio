@@ -4,10 +4,11 @@ import {
   IName,
   IParams,
   IResultResponse,
+  ISearchTaskRequest,
   ITaskDetails,
   ITaskPackage,
   ITaskPageable,
-  ITaskRequest
+  ITaskRequest,
 } from "./types";
 
 export const getConfigApi = async (): Promise<IConfig> => {
@@ -22,6 +23,13 @@ export const createTaskApi = async (
 
 export const getTaskApi = async (id: number): Promise<ITaskDetails> => {
   return httpClient.get(`/app/tasks/${id}`);
+};
+
+export const getFilteredTasksApi = async (
+  params: IParams,
+  data: ISearchTaskRequest
+): Promise<ITaskPageable> => {
+  return httpClient.post("/app/tasks/filter", data, undefined, params);
 };
 
 export const getTasksAssignedToUserApi = async (): Promise<ITaskPackage> => {
