@@ -13,9 +13,10 @@ export class HttpClient {
   public async post<T>(
     url: string,
     data: any,
-    contentType = "application/json" as ContentType
+    contentType = "application/json" as ContentType,
+    params?: IParams
   ): Promise<T> {
-    return this.send(url, "POST", data, contentType);
+    return this.send(url, "POST", data, contentType, params);
   }
 
   public async put<T>(
