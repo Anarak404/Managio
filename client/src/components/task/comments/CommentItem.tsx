@@ -1,7 +1,7 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import React from "react";
 import { IComment } from "../../../api/types";
-import { dateFormatter } from "../../../contexts/settings/dateFormatter";
+import { dateFormatter } from "../../../utils/dateFormatter";
 
 interface IProps {
   comment: IComment;
