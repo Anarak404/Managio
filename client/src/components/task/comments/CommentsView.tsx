@@ -1,6 +1,8 @@
 import { Button, TextField, Typography } from "@mui/material";
-import React, { useCallback, useRef } from "react";
-import { addCommentApi } from "../../../api/comment";
+import React, { useCallback, useEffect, useReducer, useRef } from "react";
+import { addCommentApi, getAllCommentsApi } from "../../../api/comment";
+import { CommentItem } from "./CommentItem";
+import { commentReducer, commentsInitialState } from "./commentReducer";
 
 interface IProps {
   id: number;
@@ -8,6 +10,8 @@ interface IProps {
 
 export function CommentsView({ id }: IProps) {
   const commentRef = useRef<HTMLInputElement>(null);
+  const [state, dispatch] = useReducer(commentReducer, commentsInitialState);
+  const { comments, loading, pageable, totalItems } = state;
 
   const handleSubmit = useCallback(() => {
     if (!commentRef.current) {
@@ -19,9 +23,27 @@ export function CommentsView({ id }: IProps) {
       return;
     }
 
-    addCommentApi(id, { description }).then(() => console.log("dziala"));
+    addCommentApi(id, { description }).then((comment) =>
+      dispatch({ type: "addComment", data: comment })
+    );
     commentRef.current.value = "";
   }, [id]);
+
+  const handleLoadMore = useCallback(() => {
+    dispatch({ type: "loadMore" });
+  }, [dispatch]);
+
+  useEffect(() => {
+    getAllCommentsApi(id, pageable).then((c) => {
+      dispatch({
+        type: "commentsLoaded",
+        data: {
+          comments: c.comments,
+          totalItems: c.totalItems,
+        },
+      });
+    });
+  }, [dispatch, id, pageable]);
 
   return (
     <React.Fragment>
@@ -34,6 +56,19 @@ export function CommentsView({ id }: IProps) {
       >
         Add
       </Button>
+      {comments.map((c) => (
+        <CommentItem comment={c} key={c.id} />
+      ))}
+      {totalItems > comments.length && (
+        <Button
+          onClick={handleLoadMore}
+          disabled={loading}
+          variant="outlined"
+          sx={{ width: "150px", alignSelf: "center" }}
+        >
+          Load more
+        </Button>
+      )}
     </React.Fragment>
   );
 }

@@ -115,7 +115,7 @@ export interface IComment {
   id: number;
   description: string;
   user: IUser;
-  time: Date;
+  time: string;
 }
 
 export interface ICreateCommentRequest {
