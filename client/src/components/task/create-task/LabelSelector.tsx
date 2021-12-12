@@ -6,7 +6,7 @@ import {
   useAutocomplete
 } from "@mui/material";
 import React, { useEffect } from "react";
-import { ILabel } from "../../api/types";
+import { ILabel } from "../../../api/types";
 
 interface IProps {
   labels: ILabel[];

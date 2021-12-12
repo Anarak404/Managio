@@ -15,7 +15,7 @@ import { useCallback, useState } from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import { DashboardView } from "./dashboard/DashboardView";
 import { TaskRoute } from "./task";
-import { TaskCreator } from "./task/TaskCreator";
+import { TaskCreator } from "./task/create-task/TaskCreator";
 import { TasksView } from "./task/TasksView";
 import { TeamRoute } from "./team";
 import { TeamsView } from "./team/TeamsView";

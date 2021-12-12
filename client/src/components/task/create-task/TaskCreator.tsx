@@ -13,10 +13,10 @@ import React, {
   useRef,
   useState
 } from "react";
-import { createTaskApi, getConfigApi } from "../../api/task";
-import { getMembersApi } from "../../api/team";
-import { ILabel, ITaskRequest, ITeam, IUser } from "../../api/types";
-import { appContext } from "../../AppContext";
+import { createTaskApi, getConfigApi } from "../../../api/task";
+import { getMembersApi } from "../../../api/team";
+import { ILabel, ITaskRequest, ITeam, IUser } from "../../../api/types";
+import { appContext } from "../../../AppContext";
 import { LabelSelector } from "./LabelSelector";
 
 interface IProps {
