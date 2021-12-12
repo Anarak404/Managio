@@ -45,3 +45,14 @@ export const changeTaskStatusApi = async (
 ): Promise<IResultResponse> => {
   return httpClient.put(`/app/tasks/${id}/status`, data);
 };
+
+export const saveAttachmentsApi = async (
+  id: number,
+  files: Blob[] | undefined
+): Promise<IResultResponse> => {
+  return httpClient.post(
+    `/app/tasks/${id}/attachments`,
+    { files },
+    "multipart/form-data"
+  );
+};

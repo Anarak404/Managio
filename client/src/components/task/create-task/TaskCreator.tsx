@@ -4,19 +4,25 @@ import {
   Button,
   Paper,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import React, {
   useCallback,
   useContext,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
-import { createTaskApi, getConfigApi } from "../../../api/task";
+import {
+  createTaskApi,
+  getConfigApi,
+  saveAttachmentsApi,
+} from "../../../api/task";
 import { getMembersApi } from "../../../api/team";
 import { ILabel, ITaskRequest, ITeam, IUser } from "../../../api/types";
 import { appContext } from "../../../AppContext";
+import { isBlob } from "../../../utils/isBlob";
+import { Attachments } from "./Attachments";
 import { LabelSelector } from "./LabelSelector";
 
 interface IProps {
@@ -35,6 +41,7 @@ export function TaskCreator({ closeModal }: IProps) {
 
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
+  const attachments = useRef([] as File[]);
 
   const { teams } = useContext(appContext);
 
@@ -119,7 +126,17 @@ export function TaskCreator({ closeModal }: IProps) {
     };
 
     createTaskApi(credentials)
-      .then(() => closeModal())
+      .then((task) => {
+        if (attachments.current.length > 0) {
+          const files: Blob[] = [
+            ...attachments.current.filter((attachment) => isBlob(attachment)),
+          ];
+
+          saveAttachmentsApi(task.id, files).then(() => closeModal());
+        } else {
+          closeModal();
+        }
+      })
       .catch(() => setMessage("Operation failed!"));
   }, [
     setMessage,
@@ -162,9 +179,7 @@ export function TaskCreator({ closeModal }: IProps) {
       </Box>
       <Typography variant="h6">Description</Typography>
       <TextField inputRef={descriptionRef} multiline rows="10"></TextField>
-      <Box sx={{ display: "flex", flexDirection: "row-reverse", p: "20px" }}>
-        <Button variant="outlined">Add attachments</Button>
-      </Box>
+      <Attachments attachmentsRef={attachments} />
       <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
         <label style={{ width: "150px" }}>Choose Team</label>
         <Autocomplete

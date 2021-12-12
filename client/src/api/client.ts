@@ -85,6 +85,10 @@ export class HttpClient {
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof Blob) {
         formData.append(key, value);
+      } else if (Array.isArray(value)) {
+        for (const v of value) {
+        formData.append(key, v as Blob)
+        }
       } else {
         formData.append(key, value as string);
       }
