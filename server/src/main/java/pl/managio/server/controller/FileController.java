@@ -20,7 +20,7 @@ public class FileController {
 
     @GetMapping(value = "/" + UPLOAD_DIR + "/{filename}")
     public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) {
-        Image image = fileService.getImage(filename);
+        Image image = fileService.getFile(filename, UPLOAD_DIR);
         if (image == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
