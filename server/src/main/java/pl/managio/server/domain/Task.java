@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import pl.managio.server.model.Priority;
 import pl.managio.server.model.TaskStatus;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -57,7 +58,7 @@ public class Task {
     @OneToMany(mappedBy = "task")
     List<Attachment> attachments;
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     List<TaskLabel> taskLabels;
 
     @ManyToOne(fetch = FetchType.LAZY)

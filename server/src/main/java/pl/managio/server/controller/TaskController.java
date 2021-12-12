@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.managio.server.domain.Task;
 import pl.managio.server.dto.request.NameRequest;
 import pl.managio.server.dto.request.SearchTaskRequest;
 import pl.managio.server.dto.request.TaskDataRequest;
 import pl.managio.server.dto.response.ConfigResponse;
 import pl.managio.server.dto.response.ResultResponse;
 import pl.managio.server.model.TaskDetailsModel;
+import pl.managio.server.model.TaskModel;
 import pl.managio.server.model.TaskPackage;
 import pl.managio.server.service.task.TaskService;
 
@@ -40,10 +40,10 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResultResponse> createTask(@Valid @RequestBody TaskDataRequest request) {
-        Optional<Task> task = taskService.createTask(request);
-        return new ResponseEntity<>(new ResultResponse(task.isPresent()),
-                task.isPresent() ? HttpStatus.CREATED : HttpStatus.FORBIDDEN);
+    public ResponseEntity<TaskModel> createTask(@Valid @RequestBody TaskDataRequest request) {
+        Optional<TaskModel> task = taskService.createTask(request);
+        return task.map(t -> new ResponseEntity<>(t, HttpStatus.CREATED))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
     }
 
     @GetMapping("/{id}")
