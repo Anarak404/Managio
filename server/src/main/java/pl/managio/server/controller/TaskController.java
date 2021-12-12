@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import pl.managio.server.dto.request.NameRequest;
 import pl.managio.server.dto.request.SearchTaskRequest;
 import pl.managio.server.dto.request.TaskDataRequest;
@@ -78,6 +79,13 @@ public class TaskController {
     public ResponseEntity<ConfigResponse> getConfig() {
         ConfigResponse config = taskService.getConfig();
         return new ResponseEntity<>(config, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/attachments")
+    public ResponseEntity<ResultResponse> saveAttachments(@PathVariable Long id,
+                                                          @RequestParam(value = "files", required = false) MultipartFile[] files) {
+        taskService.addAttachments(id, files);
+        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
     }
 
 }

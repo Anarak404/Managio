@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import pl.managio.server.domain.Attachment;
 import pl.managio.server.domain.Label;
 import pl.managio.server.domain.Task;
 import pl.managio.server.domain.TaskLabel;
@@ -20,11 +22,13 @@ import pl.managio.server.model.TaskDetailsModel;
 import pl.managio.server.model.TaskModel;
 import pl.managio.server.model.TaskPackage;
 import pl.managio.server.model.TaskStatus;
+import pl.managio.server.repository.AttachmentRepository;
 import pl.managio.server.repository.LabelRepository;
 import pl.managio.server.repository.TaskRepository;
 import pl.managio.server.repository.TeamRepository;
 import pl.managio.server.repository.UserRepository;
 import pl.managio.server.service.authentication.AuthenticationService;
+import pl.managio.server.service.file.FileService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -44,6 +48,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static pl.managio.server.controller.FileController.UPLOAD_ATTACHMENTS_DIR;
+
 @Service
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
@@ -52,6 +58,8 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final LabelRepository labelRepository;
+    private final AttachmentRepository attachmentRepository;
+    private final FileService fileService;
     private final AuthenticationService authenticationService;
 
     @PersistenceContext
@@ -169,6 +177,27 @@ public class TaskServiceImpl implements TaskService {
 
         return new ConfigResponse(labels, priorities);
     }
+
+    @Override
+    public void addAttachments(long id, MultipartFile[] files) {
+        var task = taskRepository.findById(id);
+        if (task.isEmpty()) {
+            return;
+        }
+        Task t = task.get();
+        Arrays.asList(files).forEach(file -> {
+            if (file != null) {
+                var path = fileService.saveFile(file, UPLOAD_ATTACHMENTS_DIR);
+                Attachment attachment = new Attachment(t, path);
+                try {
+                    attachmentRepository.save(attachment);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 
     private boolean canModify(Task task, User user) {
         return task.getUser().getId().equals(user.getId()) || task.getReporter().getId().equals(user.getId());

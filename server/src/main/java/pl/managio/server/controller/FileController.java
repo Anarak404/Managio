@@ -16,11 +16,12 @@ import pl.managio.server.service.file.FileService;
 public class FileController {
 
     private final FileService fileService;
-    public static final String UPLOAD_DIR = "images";
+    public static final String UPLOAD_IMAGES_DIR = "images";
+    public static final String UPLOAD_ATTACHMENTS_DIR = "attachments";
 
-    @GetMapping(value = "/" + UPLOAD_DIR + "/{filename}")
+    @GetMapping(value = "/" + UPLOAD_IMAGES_DIR + "/{filename}")
     public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename) {
-        Image image = fileService.getFile(filename, UPLOAD_DIR);
+        Image image = fileService.getFile(filename, UPLOAD_IMAGES_DIR);
         if (image == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

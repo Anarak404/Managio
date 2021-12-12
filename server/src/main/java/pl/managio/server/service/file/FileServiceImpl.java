@@ -15,7 +15,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import java.util.UUID;
 
-import static pl.managio.server.controller.FileController.UPLOAD_DIR;
+import static pl.managio.server.controller.FileController.UPLOAD_ATTACHMENTS_DIR;
+import static pl.managio.server.controller.FileController.UPLOAD_IMAGES_DIR;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -23,7 +24,8 @@ public class FileServiceImpl implements FileService {
     @PostConstruct
     public void init() {
         try {
-            Files.createDirectories(Path.of(UPLOAD_DIR));
+            Files.createDirectories(Path.of(UPLOAD_IMAGES_DIR));
+            Files.createDirectories(Path.of(UPLOAD_ATTACHMENTS_DIR));
         } catch (IOException e) {
             e.printStackTrace();
         }

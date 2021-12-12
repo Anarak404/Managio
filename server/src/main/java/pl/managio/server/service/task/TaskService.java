@@ -1,5 +1,6 @@
 package pl.managio.server.service.task;
 
+import org.springframework.web.multipart.MultipartFile;
 import pl.managio.server.dto.request.SearchTaskRequest;
 import pl.managio.server.dto.request.TaskDataRequest;
 import pl.managio.server.dto.response.ConfigResponse;
@@ -25,5 +26,7 @@ public interface TaskService {
     boolean changeTaskStatus(long id, String newStatus);
 
     ConfigResponse getConfig();
+
+    void addAttachments(long id, MultipartFile[] files);
 
 }

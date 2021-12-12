@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static pl.managio.server.controller.FileController.UPLOAD_DIR;
+import static pl.managio.server.controller.FileController.UPLOAD_IMAGES_DIR;
 
 @Service
 @RequiredArgsConstructor
@@ -151,7 +151,7 @@ public class TeamServiceImpl implements TeamService {
 
     private void setTeamPhoto(MultipartFile photo, Team t) {
         if (photo != null) {
-            var file = fileService.saveFile(photo, UPLOAD_DIR);
+            var file = fileService.saveFile(photo, UPLOAD_IMAGES_DIR);
             t.setPhoto(file);
         } else {
             t.setPhoto("");

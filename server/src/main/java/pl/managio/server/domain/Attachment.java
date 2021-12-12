@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import pl.managio.server.model.AttachmentType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,13 +27,15 @@ public class Attachment {
     Long id;
 
     @Column
-    AttachmentType type;
-
-    @Column
-    String content;
+    String path;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", nullable = false)
     Task task;
+
+    public Attachment(Task task, String path) {
+        this.task = task;
+        this.path = path;
+    }
 
 }
