@@ -8,6 +8,8 @@ public interface FileService {
 
     Image getFile(String filename, String directory);
 
+    String getAttachmentName(String path);
+
     String saveFile(MultipartFile file, String directory);
 
 }

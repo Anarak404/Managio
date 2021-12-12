@@ -1,10 +1,12 @@
 package pl.managio.server.service.file;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.managio.server.model.Image;
+import pl.managio.server.repository.AttachmentRepository;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -19,7 +21,10 @@ import static pl.managio.server.controller.FileController.UPLOAD_ATTACHMENTS_DIR
 import static pl.managio.server.controller.FileController.UPLOAD_IMAGES_DIR;
 
 @Service
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
+
+    private final AttachmentRepository attachmentRepository;
 
     @PostConstruct
     public void init() {
@@ -51,6 +56,11 @@ public class FileServiceImpl implements FileService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public String getAttachmentName(String path) {
+        return attachmentRepository.getAttachmentName(path);
     }
 
     @Override
