@@ -29,13 +29,17 @@ public class Attachment {
     @Column
     String path;
 
+    @Column
+    String name;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", nullable = false)
     Task task;
 
-    public Attachment(Task task, String path) {
+    public Attachment(Task task, String path, String filename) {
         this.task = task;
         this.path = path;
+        this.name = filename;
     }
 
 }

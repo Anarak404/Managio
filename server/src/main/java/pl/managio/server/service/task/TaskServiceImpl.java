@@ -186,14 +186,15 @@ public class TaskServiceImpl implements TaskService {
         }
         Task t = task.get();
         Arrays.asList(files).forEach(file -> {
-            if (file != null) {
-                var path = fileService.saveFile(file, UPLOAD_ATTACHMENTS_DIR);
-                Attachment attachment = new Attachment(t, path);
-                try {
-                    attachmentRepository.save(attachment);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            if (file == null) {
+                return;
+            }
+            var path = fileService.saveFile(file, UPLOAD_ATTACHMENTS_DIR);
+            Attachment attachment = new Attachment(t, path, file.getOriginalFilename());
+            try {
+                attachmentRepository.save(attachment);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
