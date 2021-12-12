@@ -68,6 +68,7 @@ export interface ITaskDetails extends ITask {
   description: string;
   reporter: IUser;
   assignedTeam: ITeam;
+  attachments: IAttachment[];
 }
 
 export interface ITaskPackage {
@@ -127,4 +128,9 @@ export interface ICommentPageable {
   totalPages: number;
   currentPage: number;
   comments: IComment[];
+}
+
+export interface IAttachment {
+  name: string;
+  path: string;
 }
