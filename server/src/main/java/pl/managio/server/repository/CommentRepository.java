@@ -12,7 +12,7 @@ import pl.managio.server.domain.Task;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query("select c from comment c where c.task = :task")
+    @Query("select c from comment c where c.task = :task order by c.creationDateTime desc")
     Page<Comment> getCommentsForTask(@Param("task") Task task, Pageable pageable);
 
 }
