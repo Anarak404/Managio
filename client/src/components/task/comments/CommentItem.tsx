@@ -1,6 +1,7 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import React from "react";
 import { IComment } from "../../../api/types";
+import { dateFormatter } from "../../../contexts/settings/dateFormatter";
 
 interface IProps {
   comment: IComment;
@@ -13,7 +14,7 @@ export function CommentItem({ comment }: IProps) {
         <Avatar src={comment.user.photo} />
         <Typography>{comment.user.name}</Typography>
         <Typography sx={{ ml: "auto", fontStyle: "italic" }}>
-          {comment.time}
+          {dateFormatter(comment.time)}
         </Typography>
       </Box>
       <Box
