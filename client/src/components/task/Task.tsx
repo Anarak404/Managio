@@ -16,6 +16,7 @@ import { appContext } from "../../AppContext";
 import { taskContext } from "../../contexts/TaskContext";
 import { Status } from "../dashboard/DashboardView";
 import { CommentsView } from "./comments/CommentsView";
+import { TaskAttachmentsView } from "./TaskAttachmentsView";
 
 const options: string[] = ["TO_DO", "IN_PROGRESS", "DONE"];
 
@@ -62,17 +63,7 @@ export function Task({ task }: IProps) {
             >
               {task.description}
             </Box>
-            <Typography variant="subtitle1">Attachments</Typography>
-            <Box
-              sx={{
-                border: "1px solid #9d977a",
-                borderRadius: "5px",
-                fontSize: "18px",
-                p: "10px",
-              }}
-            >
-              Attachments
-            </Box>
+            <TaskAttachmentsView attachments={task.attachments} />
             <CommentsView id={task.id} />
           </Box>
           <Divider flexItem orientation="vertical" />
