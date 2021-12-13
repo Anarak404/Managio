@@ -17,9 +17,8 @@ export interface IResultResponse {
   success: boolean;
 }
 
-export interface ITeamRequest {
+export interface ITeamRequest extends IPhoto {
   name: string;
-  photo: Blob | undefined;
 }
 
 export interface IUser {
@@ -133,4 +132,13 @@ export interface ICommentPageable {
 export interface IAttachment {
   name: string;
   path: string;
+}
+
+export interface IPasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface IPhoto {
+  photo: Blob | undefined;
 }
