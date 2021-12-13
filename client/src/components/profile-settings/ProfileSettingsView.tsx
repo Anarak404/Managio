@@ -11,16 +11,23 @@ import {
 } from "@mui/material";
 import React, { useCallback, useContext, useState } from "react";
 import { appContext } from "../../AppContext";
+import { PasswordChangeDialog } from "./PasswordChangeDialog";
 import { PhotoSelector } from "./PhotoSelector";
 
 export function ProfileSettingsView() {
   const { me } = useContext(appContext);
 
   const [editPhotoOpen, setEditPhotoOpen] = useState<boolean>(false);
+  const [changePasswordDialogOpen, setChangePasswordDialogOpen] =
+    useState<boolean>(false);
 
   const togglePhotoSelectorVisibility = useCallback(() => {
     setEditPhotoOpen((s) => !s);
   }, [setEditPhotoOpen]);
+
+  const togglePasswordDialogVisibility = useCallback(() => {
+    setChangePasswordDialogOpen((s) => !s);
+  }, [setChangePasswordDialogOpen]);
 
   return (
     <Box
@@ -117,7 +124,13 @@ export function ProfileSettingsView() {
             <Divider />
             <Button
               variant="outlined"
-              sx={{ width: "fit-content", my: "8px", alignSelf: "center" }}
+              onClick={togglePasswordDialogVisibility}
+              sx={{
+                width: "fit-content",
+                my: "8px",
+                alignSelf: "center",
+                mt: "auto",
+              }}
             >
               Change password
             </Button>
@@ -129,6 +142,12 @@ export function ProfileSettingsView() {
           photo={me?.photo}
           closeModal={togglePhotoSelectorVisibility}
         />
+      </Modal>
+      <Modal
+        open={changePasswordDialogOpen}
+        onClose={togglePasswordDialogVisibility}
+      >
+        <PasswordChangeDialog closeModal={togglePasswordDialogVisibility} />
       </Modal>
     </Box>
   );
