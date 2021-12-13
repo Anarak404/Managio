@@ -1,13 +1,13 @@
 import { httpClient } from "./client";
 import {
-  IName,
+  INameRequest,
   IPasswordRequest,
   IPhoto,
   IResultResponse,
   IUser,
 } from "./types";
 
-export const changeNameApi = async (data: IName): Promise<IUser> => {
+export const changeNameApi = async (data: INameRequest): Promise<IUser> => {
   return httpClient.put("/app/profile/name", data);
 };
 

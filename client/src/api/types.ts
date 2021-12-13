@@ -142,3 +142,7 @@ export interface IPasswordRequest {
 export interface IPhoto {
   photo: Blob | undefined;
 }
+
+export interface INameRequest {
+  name: string;
+}
