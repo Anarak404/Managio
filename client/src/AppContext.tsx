@@ -9,6 +9,7 @@ interface IAppContext {
   me: IUser | undefined;
   teams: ITeam[];
   getTeams(): void;
+  updateProfile(data: IUser): void;
 }
 
 interface IAppContextProps {
@@ -21,6 +22,7 @@ const defaultValue: IAppContext = {
   me: undefined,
   teams: [],
   getTeams: () => void 0,
+  updateProfile: () => void 0,
 };
 
 export const appContext = createContext<IAppContext>(defaultValue);
@@ -32,6 +34,13 @@ export function AppContextProvider({ children }: IAppContextProps) {
   const [teams, setTeams] = useState<ITeam[]>([]);
 
   const signIn = useCallback(
+    (data: IUser) => {
+      setMe(data);
+    },
+    [setMe]
+  );
+
+  const updateProfile = useCallback(
     (data: IUser) => {
       setMe(data);
     },
@@ -57,7 +66,14 @@ export function AppContextProvider({ children }: IAppContextProps) {
 
   return (
     <Provider
-      value={{ signIn, loggedIn: me !== undefined, me, teams, getTeams }}
+      value={{
+        signIn,
+        loggedIn: me !== undefined,
+        me,
+        teams,
+        getTeams,
+        updateProfile,
+      }}
     >
       {children}
     </Provider>

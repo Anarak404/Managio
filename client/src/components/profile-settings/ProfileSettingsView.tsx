@@ -5,14 +5,22 @@ import {
   Button,
   Divider,
   IconButton,
+  Modal,
   Paper,
   Typography,
 } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { appContext } from "../../AppContext";
+import { PhotoSelector } from "./PhotoSelector";
 
 export function ProfileSettingsView() {
   const { me } = useContext(appContext);
+
+  const [editPhotoOpen, setEditPhotoOpen] = useState<boolean>(false);
+
+  const togglePhotoSelectorVisibility = useCallback(() => {
+    setEditPhotoOpen((s) => !s);
+  }, [setEditPhotoOpen]);
 
   return (
     <Box
@@ -42,7 +50,10 @@ export function ProfileSettingsView() {
         >
           <Box sx={{ display: "flex" }}>
             <Avatar src={me?.photo} sx={{ width: "150px", height: "150px" }} />
-            <IconButton sx={{ height: "fit-content", alignSelf: "flex-end" }}>
+            <IconButton
+              onClick={togglePhotoSelectorVisibility}
+              sx={{ height: "fit-content", alignSelf: "flex-end" }}
+            >
               <EditIcon />
             </IconButton>
           </Box>
@@ -113,6 +124,12 @@ export function ProfileSettingsView() {
           </Paper>
         </Box>
       </Paper>
+      <Modal open={editPhotoOpen} onClose={togglePhotoSelectorVisibility}>
+        <PhotoSelector
+          photo={me?.photo}
+          closeModal={togglePhotoSelectorVisibility}
+        />
+      </Modal>
     </Box>
   );
 }
