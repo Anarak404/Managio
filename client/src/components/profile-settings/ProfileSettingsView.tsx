@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import React, { useCallback, useContext, useState } from "react";
 import { appContext } from "../../AppContext";
+import { NameChangeDialog } from "./NameChangeDialog";
 import { PasswordChangeDialog } from "./PasswordChangeDialog";
 import { PhotoSelector } from "./PhotoSelector";
 
@@ -18,6 +19,8 @@ export function ProfileSettingsView() {
   const { me } = useContext(appContext);
 
   const [editPhotoOpen, setEditPhotoOpen] = useState<boolean>(false);
+  const [changeNameDialogOpen, setChangeNameDialogOpen] =
+    useState<boolean>(false);
   const [changePasswordDialogOpen, setChangePasswordDialogOpen] =
     useState<boolean>(false);
 
@@ -28,6 +31,10 @@ export function ProfileSettingsView() {
   const togglePasswordDialogVisibility = useCallback(() => {
     setChangePasswordDialogOpen((s) => !s);
   }, [setChangePasswordDialogOpen]);
+
+  const toggleNameDialogVisibility = useCallback(() => {
+    setChangeNameDialogOpen((s) => !s);
+  }, [setChangeNameDialogOpen]);
 
   return (
     <Box
@@ -116,7 +123,7 @@ export function ProfileSettingsView() {
                 }}
               >
                 <Typography sx={{ ml: "80px" }}>{me?.name}</Typography>
-                <IconButton>
+                <IconButton onClick={toggleNameDialogVisibility}>
                   <EditIcon />
                 </IconButton>
               </Box>
@@ -148,6 +155,9 @@ export function ProfileSettingsView() {
         onClose={togglePasswordDialogVisibility}
       >
         <PasswordChangeDialog closeModal={togglePasswordDialogVisibility} />
+      </Modal>
+      <Modal open={changeNameDialogOpen} onClose={toggleNameDialogVisibility}>
+        <NameChangeDialog closeModal={toggleNameDialogVisibility} />
       </Modal>
     </Box>
   );
