@@ -1,5 +1,6 @@
 import { ExitToApp } from "@mui/icons-material";
 import {
+  Avatar,
   Box,
   Button,
   Divider,
@@ -9,11 +10,13 @@ import {
   ListItemButton,
   ListItemText,
   Modal,
-  Toolbar
+  Toolbar,
 } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { appContext } from "../AppContext";
 import { DashboardView } from "./dashboard/DashboardView";
+import { ProfileSettingsView } from "./profile-settings/ProfileSettingsView";
 import { TaskRoute } from "./task";
 import { TaskCreator } from "./task/create-task/TaskCreator";
 import { TasksView } from "./task/TasksView";
@@ -26,11 +29,11 @@ const manuItems = [
   { name: "Dashboard", url: "/dashboard" },
   { name: "Teams", url: "/teams" },
   { name: "Issues", url: "/issues" },
-  { name: "Search issues", url: "/search-issue" },
 ];
 
 export function MainView() {
   const [open, setOpen] = useState<boolean>(false);
+  const { me } = useContext(appContext);
 
   const toggleVisibility = useCallback(() => {
     setOpen((s) => !s);
@@ -79,6 +82,14 @@ export function MainView() {
           </List>
           <Button onClick={toggleVisibility}>Create task</Button>
           <Toolbar sx={{ flex: 1 }} />
+          <Link
+            to={"settings"}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <IconButton>
+              <Avatar src={me?.photo} />
+            </IconButton>
+          </Link>
           <Divider />
           <IconButton>
             <ExitToApp fontSize="large" color="primary" />
@@ -97,7 +108,7 @@ export function MainView() {
             <Route path="teams/team/:id" element={<TeamRoute />} />
             <Route path="issues" element={<TasksView />} />
             <Route path="issues/issue/:id" element={<TaskRoute />} />
-            <Route path="search-issue" element={<TasksView />} />
+            <Route path="settings" element={<ProfileSettingsView />} />
           </Routes>
         </Box>
         <Modal open={open} onClose={toggleVisibility} sx={{ display: "flex" }}>
