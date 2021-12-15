@@ -85,12 +85,10 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<UserModel> getMembers(Long id) {
-        var team = teamRepository.findById(id);
-        return team.map(x -> teamMemberRepository.findAllByTeam(x).stream()
-                        .filter(teamMember -> !teamMember.isDeleted())
-                        .map(t -> new UserModel(t.getUser()))
-                        .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+        return teamMemberRepository.getUsersFromTeam(id).stream()
+                .filter(teamMember -> !teamMember.isDeleted())
+                .map(t -> new UserModel(t.getUser()))
+                .collect(Collectors.toList());
     }
 
     @Override

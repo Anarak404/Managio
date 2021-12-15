@@ -1,6 +1,8 @@
 package pl.managio.server.repository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.managio.server.domain.Team;
 import pl.managio.server.domain.TeamMember;
@@ -13,8 +15,9 @@ import java.util.Optional;
 @Repository
 public interface TeamMemberRepository extends CrudRepository<TeamMember, TeamMemberKey> {
 
-    List<TeamMember> findAllByTeam(Team team);
-
     Optional<TeamMember> findByTeamAndUser(Team team, User user);
+
+    @Query("select t from team_member t join fetch t.user where t.team.id = :teamId")
+    List<TeamMember> getUsersFromTeam(@Param("teamId") Long teamId);
 
 }
