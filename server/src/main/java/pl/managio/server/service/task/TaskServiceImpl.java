@@ -164,6 +164,36 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Optional<TaskDetailsModel> editTask(long id, TaskDataRequest data) {
+        User me = authenticationService.getCurrentUser();
+        var task = taskRepository.findById(id);
+        if (task.isEmpty() || !isReporter(task.get(), me)) {
+            return Optional.empty();
+        }
+
+        Task t = task.get();
+        var team = teamRepository.findById(data.getTeamId());
+        var assignedUser = userRepository.findById(data.getUserId());
+
+        if (team.isEmpty() || assignedUser.isEmpty()) {
+            return Optional.empty();
+        }
+
+        try {
+            t.setTitle(data.getTitle());
+            t.setDescription(data.getDescription());
+            t.setTeam(team.get());
+            t.setUser(assignedUser.get());
+            t.setPriority(Priority.valueOf(data.getPriority()));
+            taskRepository.save(t);
+            addLabelsToTask(t, data.getLabels());
+            return Optional.of(new TaskDetailsModel(t));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public ConfigResponse getConfig() {
         var iterable = labelRepository.findAll();
 
@@ -199,9 +229,12 @@ public class TaskServiceImpl implements TaskService {
         });
     }
 
-
     private boolean canModify(Task task, User user) {
-        return task.getUser().getId().equals(user.getId()) || task.getReporter().getId().equals(user.getId());
+        return task.getUser().getId().equals(user.getId()) || isReporter(task, user);
+    }
+
+    private boolean isReporter(Task task, User user) {
+        return task.getReporter().getId().equals(user.getId());
     }
 
     private void addLabelsToTask(Task task, List<LabelModel> labels) {

@@ -25,6 +25,8 @@ public interface TaskService {
 
     boolean changeTaskStatus(long id, String newStatus);
 
+    Optional<TaskDetailsModel> editTask(long id, TaskDataRequest data);
+
     ConfigResponse getConfig();
 
     void addAttachments(long id, MultipartFile[] files);

@@ -75,6 +75,13 @@ public class TaskController {
         return new ResponseEntity<>(new ResultResponse(result), result ? HttpStatus.OK : HttpStatus.FORBIDDEN);
     }
 
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<TaskDetailsModel> editTask(@PathVariable Long id, @RequestBody TaskDataRequest req) {
+        var task = taskService.editTask(id, req);
+        return task.map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.FORBIDDEN));
+    }
+
     @GetMapping("/config")
     public ResponseEntity<ConfigResponse> getConfig() {
         ConfigResponse config = taskService.getConfig();
