@@ -46,6 +46,13 @@ export const changeTaskStatusApi = async (
   return httpClient.put(`/app/tasks/${id}/status`, data);
 };
 
+export const editTaskApi = async (
+  id: number,
+  data: ITaskRequest
+): Promise<ITaskDetails> => {
+  return httpClient.put(`/app/tasks/${id}/edit`, data);
+};
+
 export const saveAttachmentsApi = async (
   id: number,
   files: Blob[] | undefined
