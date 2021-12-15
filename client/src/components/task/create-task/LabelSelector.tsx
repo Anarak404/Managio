@@ -3,14 +3,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   AutocompleteGetTagProps,
   styled,
-  useAutocomplete
+  useAutocomplete,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { ILabel } from "../../../api/types";
 
 interface IProps {
   labels: ILabel[];
   handleLabels(l: ILabel[]): void;
+  selectedLabels?: ILabel[];
 }
 
 const Label = styled("label")`
@@ -155,7 +156,11 @@ const Listbox = styled("ul")(
 `
 );
 
-export function LabelSelector({ labels, handleLabels }: IProps) {
+export const LabelSelector = memo(function LabelSelector({
+  labels,
+  handleLabels,
+  selectedLabels,
+}: IProps) {
   const {
     getRootProps,
     getInputLabelProps,
@@ -171,6 +176,7 @@ export function LabelSelector({ labels, handleLabels }: IProps) {
     multiple: true,
     options: labels,
     getOptionLabel: (option) => option.label,
+    defaultValue: selectedLabels,
   });
 
   useEffect(() => {
@@ -181,7 +187,11 @@ export function LabelSelector({ labels, handleLabels }: IProps) {
     <React.Fragment>
       <div {...getRootProps()}>
         <Label {...getInputLabelProps()}>Labels</Label>
-        <InputWrapper ref={setAnchorEl} className={focused ? "focused" : ""}>
+        <InputWrapper
+          ref={setAnchorEl}
+          className={focused ? "focused" : ""}
+          style={{ width: selectedLabels ? "350px" : undefined }}
+        >
           {value.map((option: ILabel, index: number) => (
             <StyledTag label={option.label} {...getTagProps({ index })} />
           ))}
@@ -202,4 +212,4 @@ export function LabelSelector({ labels, handleLabels }: IProps) {
       </div>
     </React.Fragment>
   );
-}
+});

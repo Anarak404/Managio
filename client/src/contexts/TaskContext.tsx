@@ -5,6 +5,7 @@ import { IName, ITaskDetails } from "../api/types";
 interface ITaskContext {
   task?: ITaskDetails;
   changeStatus(data: IName): void;
+  setTask: React.Dispatch<React.SetStateAction<ITaskDetails | undefined>>;
 }
 
 interface ITaskContextProps {
@@ -15,6 +16,7 @@ interface ITaskContextProps {
 const defaultValue: ITaskContext = {
   task: undefined,
   changeStatus: () => void 0,
+  setTask: () => void 0,
 };
 
 export const taskContext = createContext<ITaskContext>(defaultValue);
@@ -44,5 +46,7 @@ export function TaskContextProvider({ id, children }: ITaskContextProps) {
     getTaskApi(id).then((response) => setTask(response));
   }, [setTask, id]);
 
-  return <Provider value={{ task, changeStatus }}>{children}</Provider>;
+  return (
+    <Provider value={{ task, changeStatus, setTask }}>{children}</Provider>
+  );
 }

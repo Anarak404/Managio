@@ -1,183 +1,122 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
-import React, { useCallback, useContext } from "react";
-import { IName, ITaskDetails } from "../../api/types";
+import { Box, Button, CircularProgress, Divider } from "@mui/material";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { editTaskApi, getConfigApi } from "../../api/task";
+import { getMembersApi } from "../../api/team";
+import { ILabel, ITaskDetails, IUser } from "../../api/types";
 import { appContext } from "../../AppContext";
 import { taskContext } from "../../contexts/TaskContext";
-import { Status } from "../dashboard/DashboardView";
-import { CommentsView } from "./comments/CommentsView";
-import { TaskAttachmentsView } from "./TaskAttachmentsView";
-
-const options: string[] = ["TO_DO", "IN_PROGRESS", "DONE"];
+import { TaskDetails } from "./TaskDetails";
+import { TaskMainContent } from "./TaskMainContent";
 
 interface IProps {
   task: ITaskDetails;
 }
 
+export type EditableTask = Pick<
+  ITaskDetails,
+  "title" | "description" | "assignedUser" | "labels" | "priority"
+>;
+
+function mapTask({
+  title,
+  description,
+  assignedUser,
+  labels,
+  priority,
+}: ITaskDetails): EditableTask {
+  return { title, description, assignedUser, labels, priority };
+}
+
 export function Task({ task }: IProps) {
   const { me } = useContext(appContext);
-  const { changeStatus } = useContext(taskContext);
+  const { setTask } = useContext(taskContext);
+  const [inEditMode, setInEditMode] = useState(false);
+  const [tempTask, setTempTask] = useState(mapTask(task));
+  const [members, setMembers] = useState<IUser[]>([]);
+  const [config, setConfig] = useState({
+    labels: [] as ILabel[],
+    priorities: [] as string[],
+  });
 
-  const handleChange = useCallback(
-    (event: SelectChangeEvent) => {
-      const data: IName = { name: event.target.value as Status };
-      changeStatus(data);
-    },
-    [changeStatus]
-  );
+  const toggleEditMode = useCallback(() => {
+    setInEditMode((s) => !s);
+  }, [setInEditMode]);
+
+  const handleCancel = useCallback(() => {
+    setTempTask(mapTask(task));
+    toggleEditMode();
+  }, [task, setTempTask, toggleEditMode]);
+
+  const handleSave = () => {
+    editTaskApi(task.id, {
+      ...tempTask,
+      teamId: task.assignedTeam.id,
+      userId: tempTask.assignedUser.id,
+    }).then((response) => {
+      setTask(response);
+      setTempTask(mapTask(response));
+      toggleEditMode();
+    });
+  };
+
+  useEffect(() => {
+    getConfigApi().then((response) => {
+      setConfig(response);
+    });
+
+    getMembersApi(task.assignedTeam.id).then((response) =>
+      setMembers(response)
+    );
+  }, [setConfig, setMembers, task]);
 
   return (
     <Box
-      sx={{ display: "flex", px: "40px", height: "auto", minHeight: "100%" }}
+      sx={{
+        display: "flex",
+        px: "40px",
+        height: "auto",
+        minHeight: "100%",
+        flexDirection: "column",
+      }}
     >
       {task ? (
         <React.Fragment>
-          <Box
-            sx={{
-              width: "100%",
-              p: "20px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-            }}
-          >
-            <Typography variant="h3">{task.title}</Typography>
-            <Typography variant="subtitle1">Description</Typography>
+          {task.reporter.id === me?.id && (
             <Box
-              sx={{
-                border: "1px solid #9d977a",
-                borderRadius: "5px",
-                fontSize: "18px",
-                p: "10px",
-              }}
+              sx={{ display: "flex", flexDirection: "row-reverse", gap: "5px" }}
             >
-              {task.description}
-            </Box>
-            <TaskAttachmentsView attachments={task.attachments} />
-            <CommentsView id={task.id} />
-          </Box>
-          <Divider flexItem orientation="vertical" />
-          <Box
-            sx={{
-              minWidth: "500px",
-              pl: "10px",
-              fontSize: "19px",
-            }}
-          >
-            {task.reporter.id === me?.id && (
-              <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
-                <Button
-                  variant="contained"
-                  sx={{ p: "10px 30px" }}
-                  color="primary"
-                >
-                  Edit
-                </Button>
-              </Box>
-            )}
-
-            <div style={{ height: "80px" }} />
-            <Box
-              sx={{
-                px: "30px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  width: "180px",
-                }}
+              <Button
+                variant="contained"
+                sx={{ p: "10px 30px" }}
+                color="primary"
+                onClick={inEditMode ? handleSave : toggleEditMode}
               >
-                {task.assignedUser.id === me?.id ? (
-                  <FormControl fullWidth>
-                    <Select
-                      value={task.status}
-                      onChange={handleChange}
-                      displayEmpty
-                      sx={{ bgcolor: "primary.main", color: "#fff" }}
-                    >
-                      {options.map((o) => (
-                        <MenuItem value={o} key={o}>
-                          {o}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                ) : (
-                  <Button variant="contained">{task.status}</Button>
-                )}
-              </Box>
-              <Divider />
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="subtitle1" sx={{ width: "130px" }}>
-                  Assigned user:
-                </Typography>
-                <Avatar src={task.assignedUser.photo} sx={{ m: "10px" }} />
-                <Box>{task.assignedUser.name}</Box>
-              </Box>
-              <Divider />
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="subtitle1" sx={{ width: "130px" }}>
-                  Reporter:
-                </Typography>
-                <Avatar src={task.reporter.photo} sx={{ m: "10px" }} />
-                <Box>{task.reporter.name}</Box>
-              </Box>
-              <Divider />
-              <Box sx={{ display: "flex" }}>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ pr: "20px", width: "130px" }}
-                >
-                  Priority:
-                </Typography>
-                {task.priority}
-              </Box>
-              <Divider />
-              <Box sx={{ display: "flex" }}>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ pr: "20px", width: "130px" }}
-                >
-                  Labels:
-                </Typography>
-                <Box sx={{ display: "flex", gap: "4px" }}>
-                  {task.labels.map((l) => (
-                    <Box
-                      sx={{
-                        bgcolor: "antiquewhite",
-                        borderRadius: "5px",
-                        px: "3px",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {l.label}
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-              <Divider />
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="subtitle1" sx={{ width: "130px" }}>
-                  Assigned team:
-                </Typography>
-                <Avatar src={task.assignedTeam.photo} sx={{ m: "10px" }} />
-                <Box>{task.assignedTeam.name}</Box>
-              </Box>
+                {inEditMode ? "Save" : "Edit"}
+              </Button>
+              {inEditMode && (
+                <Button variant="outlined" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              )}
             </Box>
+          )}
+          <Box sx={{ display: "flex" }}>
+            <TaskMainContent
+              task={task}
+              inEditMode={inEditMode}
+              mappedTask={tempTask}
+              setTempTask={setTempTask}
+            />
+            <Divider flexItem orientation="vertical" />
+            <TaskDetails
+              task={task}
+              inEditMode={inEditMode}
+              mappedTask={tempTask}
+              setTempTask={setTempTask}
+              members={members}
+              labels={config.labels}
+              priorities={config.priorities}
+            />
           </Box>
         </React.Fragment>
       ) : (
