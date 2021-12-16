@@ -31,6 +31,11 @@ export class HttpClient {
     return this.send(url, "PUT", undefined);
   }
 
+  public async head(url: string) {
+    url = this.prepareUrl(url);
+    await fetch(url, { method: "HEAD", credentials: "include" });
+  }
+
   public async send<T>(
     url: string,
     method: "POST" | "PUT" | "GET" | "DELETE",
@@ -87,7 +92,7 @@ export class HttpClient {
         formData.append(key, value);
       } else if (Array.isArray(value)) {
         for (const v of value) {
-        formData.append(key, v as Blob)
+          formData.append(key, v as Blob);
         }
       } else {
         formData.append(key, value as string);

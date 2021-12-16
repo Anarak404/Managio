@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
-import { checkLoginApi } from "./api/auth";
+import { checkLoginApi, logoutApi } from "./api/auth";
 import { getTeamsApi } from "./api/team";
 import { ITeam, IUser } from "./api/types";
 
@@ -10,6 +10,7 @@ interface IAppContext {
   teams: ITeam[];
   getTeams(): void;
   updateProfile(data: IUser): void;
+  logout(): void;
 }
 
 interface IAppContextProps {
@@ -23,6 +24,7 @@ const defaultValue: IAppContext = {
   teams: [],
   getTeams: () => void 0,
   updateProfile: () => void 0,
+  logout: () => void 0,
 };
 
 export const appContext = createContext<IAppContext>(defaultValue);
@@ -39,6 +41,10 @@ export function AppContextProvider({ children }: IAppContextProps) {
     },
     [setMe]
   );
+
+  const logout = useCallback(() => {
+    logoutApi().then(() => setMe(undefined));
+  }, [setMe]);
 
   const updateProfile = useCallback(
     (data: IUser) => {
@@ -73,6 +79,7 @@ export function AppContextProvider({ children }: IAppContextProps) {
         teams,
         getTeams,
         updateProfile,
+        logout,
       }}
     >
       {children}

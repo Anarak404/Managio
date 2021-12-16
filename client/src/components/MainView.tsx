@@ -33,7 +33,7 @@ const manuItems = [
 
 export function MainView() {
   const [open, setOpen] = useState<boolean>(false);
-  const { me } = useContext(appContext);
+  const { me, logout } = useContext(appContext);
 
   const toggleVisibility = useCallback(() => {
     setOpen((s) => !s);
@@ -91,7 +91,10 @@ export function MainView() {
             </IconButton>
           </Link>
           <Divider />
-          <IconButton>
+          <IconButton
+            onClick={logout}
+            sx={{ width: "fit-content", alignSelf: "center" }}
+          >
             <ExitToApp fontSize="large" color="primary" />
           </IconButton>
         </Drawer>

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -37,11 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     cors.addAllowedOriginPattern("http://localhost:3000");
                     cors.setAllowCredentials(true);
                     cors.addAllowedMethod(HttpMethod.PUT);
+                    cors.addAllowedMethod(HttpMethod.HEAD);
                     return cors;
                 })
                     .and()
                 .addFilterBefore(jsonAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout()
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.HEAD.toString()))
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> httpServletResponse.setStatus(200))

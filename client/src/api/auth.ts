@@ -12,3 +12,7 @@ export const signUpApi = async (data: ISignUpRequest): Promise<IUser> => {
 export const checkLoginApi = async (): Promise<IUser> => {
   return httpClient.get("/checkLogin");
 };
+
+export const logoutApi = async () => {
+  httpClient.head("/logout");
+};
