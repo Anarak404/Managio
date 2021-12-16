@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import { ILabel, IName, ITaskDetails, IUser } from "../../api/types";
 import { appContext } from "../../AppContext";
 import { taskContext } from "../../contexts/TaskContext";
@@ -127,7 +127,7 @@ export function TaskDetails({
           </Typography>
           {inEditMode ? (
             <Autocomplete
-              value={task.assignedUser}
+              value={mappedTask.assignedUser}
               onChange={assigneeUser}
               options={members}
               getOptionLabel={(option) => option.name}
@@ -157,7 +157,7 @@ export function TaskDetails({
           </Typography>
           {inEditMode ? (
             <Autocomplete
-              value={task.priority}
+              value={mappedTask.priority}
               options={priorities}
               onChange={handlePriority}
               renderInput={(params) => (
@@ -178,7 +178,7 @@ export function TaskDetails({
               <LabelSelector
                 labels={labels}
                 handleLabels={handleLabels}
-                selectedLabels={task.labels}
+                selectedLabels={mappedTask.labels}
               />
             ) : (
               task.labels.map((l) => (

@@ -198,7 +198,7 @@ export const LabelSelector = memo(function LabelSelector({
           <input {...getInputProps()} />
         </InputWrapper>
       </div>
-      <div style={{ position: "relative" }}>
+      <div style={{ position: selectedLabels ? "absolute" : "relative" }}>
         {groupedOptions.length > 0 ? (
           <Listbox {...getListboxProps()}>
             {(groupedOptions as typeof labels).map((option, index) => (

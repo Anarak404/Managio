@@ -1,5 +1,5 @@
 import { Box, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useCallback } from "react";
 import { ITaskDetails } from "../../api/types";
 import { CommentsView } from "./comments/CommentsView";
 import { EditableTask } from "./Task";
@@ -18,6 +18,20 @@ export function TaskMainContent({
   mappedTask,
   setTempTask,
 }: IProps) {
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setTempTask((task) => ({ ...task, title: e.target.value }));
+    },
+    [setTempTask]
+  );
+
+  const handleDescriptionChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setTempTask((task) => ({ ...task, description: e.target.value }));
+    },
+    [setTempTask]
+  );
+
   return (
     <Box
       sx={{
@@ -33,9 +47,7 @@ export function TaskMainContent({
           multiline
           rows={1}
           value={mappedTask.title}
-          onChange={(e) =>
-            setTempTask((task) => ({ ...task, title: e.target.value }))
-          }
+          onChange={handleTitleChange}
         />
       ) : (
         <Typography variant="h3">{task.title}</Typography>
@@ -47,9 +59,7 @@ export function TaskMainContent({
           multiline
           rows={10}
           value={mappedTask.description}
-          onChange={(e) =>
-            setTempTask((task) => ({ ...task, description: e.target.value }))
-          }
+          onChange={handleDescriptionChange}
         />
       ) : (
         <Box
