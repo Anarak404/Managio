@@ -49,8 +49,7 @@ export function MainView() {
             "& .MuiDrawer-paper": {
               width: drawerWidth,
               boxSizing: "border-box",
-              background: (theme) => `${theme.palette.background.default}`,
-              color: (theme) => `${theme.palette.primary.main}`,
+              background: (theme) => `${theme.menuBackgroundColor}`,
             },
           }}
           variant="permanent"
@@ -66,11 +65,20 @@ export function MainView() {
                   textDecoration: "none",
                 }}
               >
-                <ListItemButton key={itemObject.name} sx={{ p: "20px" }}>
+                <ListItemButton
+                  key={itemObject.name}
+                  sx={{
+                    p: "20px",
+                    "& .MuiTouchRipple-root span": {
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                >
                   <ListItemText
                     primary={itemObject.name}
                     sx={{
                       textAlign: "center",
+                      color: (theme) => `${theme.palette.primary.contrastText}`,
                       "& .MuiTypography": {
                         fontSize: "25px",
                       },
@@ -80,7 +88,17 @@ export function MainView() {
               </Link>
             ))}
           </List>
-          <Button onClick={toggleVisibility}>Create task</Button>
+          <Button
+            onClick={toggleVisibility}
+            sx={{
+              color: (theme) => `${theme.palette.primary.contrastText}`,
+              width: "fit-content",
+              alignSelf: "center",
+              border: "1px solid",
+            }}
+          >
+            Create task
+          </Button>
           <Toolbar sx={{ flex: 1 }} />
           <Link
             to={"settings"}
@@ -103,6 +121,7 @@ export function MainView() {
             flexGrow: 1,
             p: 3,
             boxSizing: "border-box",
+            bgcolor: "#eee",
           }}
         >
           <Routes>

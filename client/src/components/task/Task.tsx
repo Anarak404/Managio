@@ -94,7 +94,13 @@ export function Task({ task }: IProps) {
                 {inEditMode ? "Save" : "Edit"}
               </Button>
               {inEditMode && (
-                <Button variant="outlined" onClick={handleCancel}>
+                <Button
+                  variant="outlined"
+                  onClick={handleCancel}
+                  sx={{
+                    bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
+                  }}
+                >
                   Cancel
                 </Button>
               )}

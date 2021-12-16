@@ -48,7 +48,12 @@ export function CommentsView({ id }: IProps) {
   return (
     <React.Fragment>
       <Typography variant="subtitle1">Comments</Typography>
-      <TextField multiline rows={3} inputRef={commentRef}></TextField>
+      <TextField
+        multiline
+        rows={3}
+        inputRef={commentRef}
+        sx={{ bgcolor: (theme) => `${theme.secondaryBackgroundColor}` }}
+      ></TextField>
       <Button
         onClick={handleSubmit}
         variant="contained"

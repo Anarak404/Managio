@@ -75,7 +75,7 @@ export function DashboardView() {
             height: "700px",
             alignSelf: "center",
             display: "flex",
-            bgcolor: "green",
+            bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
             borderRadius: "10px",
             p: "10px",
           }}

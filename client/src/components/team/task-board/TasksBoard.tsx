@@ -15,6 +15,7 @@ export function TasksBoard({ doneTasks, inProgressTasks, todoTasks }: IProps) {
       sx={{
         display: "flex",
         height: "500px",
+        bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
       }}
     >
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>

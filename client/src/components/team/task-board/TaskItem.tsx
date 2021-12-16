@@ -12,7 +12,7 @@ export function TaskItem({ task }: IProps) {
     <Box
       sx={{
         display: "flex",
-        bgcolor: "red",
+        bgcolor: (theme) => `${theme.contentBackgroundColor}`,
         minHeight: "80px",
         borderRadius: "8px",
         m: "10px 5px",
@@ -38,7 +38,7 @@ export function TaskItem({ task }: IProps) {
             {task.labels.map((l) => (
               <Box
                 sx={{
-                  bgcolor: "antiquewhite",
+                  bgcolor: (theme) => `${theme.labelBackGroundColor}`,
                   borderRadius: "5px",
                   px: "3px",
                   whiteSpace: "nowrap",

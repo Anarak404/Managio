@@ -132,7 +132,13 @@ export function TaskDetails({
               options={members}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (
-                <TextField {...params} sx={{ width: "200px" }} />
+                <TextField
+                  {...params}
+                  sx={{
+                    width: "200px",
+                    bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
+                  }}
+                />
               )}
             />
           ) : (
@@ -161,7 +167,13 @@ export function TaskDetails({
               options={priorities}
               onChange={handlePriority}
               renderInput={(params) => (
-                <TextField {...params} sx={{ width: "200px" }} />
+                <TextField
+                  {...params}
+                  sx={{
+                    width: "200px",
+                    bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
+                  }}
+                />
               )}
             />
           ) : (
@@ -185,7 +197,7 @@ export function TaskDetails({
                 <Box
                   key={l.label}
                   sx={{
-                    bgcolor: "antiquewhite",
+                    bgcolor: (theme) => `${theme.labelBackGroundColor}`,
                     borderRadius: "5px",
                     px: "3px",
                     whiteSpace: "nowrap",

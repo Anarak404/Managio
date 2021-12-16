@@ -48,6 +48,7 @@ export function TaskMainContent({
           rows={1}
           value={mappedTask.title}
           onChange={handleTitleChange}
+          sx={{ bgcolor: (theme) => `${theme.secondaryBackgroundColor}` }}
         />
       ) : (
         <Typography variant="h3">{task.title}</Typography>
@@ -60,14 +61,16 @@ export function TaskMainContent({
           rows={10}
           value={mappedTask.description}
           onChange={handleDescriptionChange}
+          sx={{ bgcolor: (theme) => `${theme.secondaryBackgroundColor}` }}
         />
       ) : (
         <Box
           sx={{
-            border: "1px solid #9d977a",
+            border: (theme) => `1px solid ${theme.labelBackGroundColor}`,
             borderRadius: "5px",
             fontSize: "18px",
             p: "10px",
+            bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
           }}
         >
           {task.description}

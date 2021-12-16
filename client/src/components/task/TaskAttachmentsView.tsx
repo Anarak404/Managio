@@ -12,10 +12,11 @@ export function TaskAttachmentsView({ attachments }: IProps) {
       <Typography variant="subtitle1">Attachments</Typography>
       <Box
         sx={{
-          border: "1px solid #9d977a",
+          border: (theme) => `1px solid ${theme.labelBackGroundColor}`,
           borderRadius: "5px",
           fontSize: "18px",
           p: "10px",
+          bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
         }}
       >
         {attachments ? (

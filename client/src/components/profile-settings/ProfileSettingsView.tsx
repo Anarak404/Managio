@@ -53,7 +53,13 @@ export function ProfileSettingsView() {
       >
         My account
       </Typography>
-      <Paper sx={{ bgcolor: "red", height: "70vh", width: "60vw" }}>
+      <Paper
+        sx={{
+          bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
+          height: "70vh",
+          width: "60vw",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -85,7 +91,7 @@ export function ProfileSettingsView() {
         >
           <Paper
             sx={{
-              bgcolor: "green",
+              bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
               width: "100%",
               height: "80%",
               display: "flex",

@@ -144,7 +144,10 @@ export function TasksView() {
           multiline
           rows="2"
           inputRef={searchRef}
-          sx={{ width: "80%" }}
+          sx={{
+            width: "80%",
+            bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
+          }}
         />
         <Button
           onClick={handleSearch}

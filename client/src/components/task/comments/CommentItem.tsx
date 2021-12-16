@@ -21,8 +21,9 @@ export function CommentItem({ comment }: IProps) {
         sx={{
           marginLeft: "50px",
           p: "5px",
-          border: "1px solid #555",
+          border: (theme) => `1px solid ${theme.labelBackGroundColor}`,
           borderRadius: "8px",
+          bgcolor: (theme) => `${theme.secondaryBackgroundColor}`,
         }}
       >
         {comment.description}
