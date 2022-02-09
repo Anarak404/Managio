@@ -97,7 +97,7 @@ export function Login() {
           color="secondary"
           sx={{ fontSize: "16px", alignSelf: "center" }}
         >
-          Fogot password?
+          {/* Fogot password? */}
         </Link>
       </FormControl>
     </Container>
